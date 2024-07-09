@@ -1,0 +1,267 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-primary: #2eb676;
+  --color-secondary: #eeaa0e;
+  --color-tertiary: #c92d2d;
+  --color-neutral-900: #000000;
+  --color-neutral-800: #13151b;
+  --color-neutral-700: #1f212c;
+  --color-neutral-600: #454545;
+  --color-neutral-500: #a0a0a0;
+  --color-neutral-400: #d6d6d6;
+  --color-neutral-300: #f4f4f4;
+  --color-neutral-200: #efecf0;
+  --color-neutral-100: #ffffff;
+}
+
+body {
+  background-color: var(--color-neutral-800);
+  color: var(--color-neutral-200);
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: var(--color-neutral-200);
+  text-decoration: none;
+}
+
+input:focus {
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+.container {
+  max-width: 1350px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+/* BUTTONS */
+
+.btn {
+  background-color: transparent;
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.25rem 1rem;
+  transition: 0.3s ease-in-out;
+  min-width: 6rem;
+}
+
+.btn--primary {
+  background-color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  color: var(--color-neutral-800);
+}
+
+.btn--primary:hover {
+  background-color: transparent;
+  color: var(--color-primary);
+  transform: translateY(-0.15rem);
+}
+
+.btn--secondary {
+  background-color: var(--color-neutral-200);
+  border: 2px solid var(--color-neutral-200);
+  color: var(--color-neutral-800);
+}
+
+.btn--secondary:hover {
+  background-color: transparent;
+  color: var(--color-neutral-200);
+  transform: translateY(-0.15rem);
+}
+
+.btn--tertiary {
+  border: 1px solid var(--color-neutral-200);
+  color: var(--color-neutral-200);
+  font-weight: 400;
+}
+
+.btn--tertiary:hover {
+  transform: translateY(-0.15rem);
+}
+
+.btn--delete {
+  background-color: var(--color-tertiary);
+  border: 2px solid var(--color-tertiary);
+  color: var(--color-neutral-800);
+}
+
+.btn--delete:hover {
+  background-color: transparent;
+  color: var(--color-tertiary);
+  transform: translateY(-0.15rem);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* LINKS */
+
+.link {
+  color: var(--color-neutral-200);
+  font-size: 1rem;
+  position: relative;
+}
+
+.link::after {
+  background-color: var(--color-neutral-200);
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  top: 100%;
+  transition: 0.3s ease-in-out;
+  width: 0;
+}
+
+.link:hover::after {
+  width: 100%;
+}
+
+/* SCORE */
+
+.score {
+  align-items: center;
+  border-radius: 50%;
+  color: var(--color-neutral-800);
+  display: flex;
+  font-size: 1.8rem;
+  font-weight: 700;
+  height: 4rem;
+  justify-content: center;
+  width: 4rem;
+}
+
+.score--good {
+  background-color: var(--color-primary);
+}
+
+.score--medium {
+  background-color: var(--color-secondary);
+}
+
+.score--bad {
+  background-color: var(--color-tertiary);
+}
+
+.score--none {
+  background-color: var(--color-neutral-500);
+}
+
+.score--small {
+  font-size: 1.3rem;
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
+/* DROPDOWN */
+
+.dropdown {
+  position: relative;
+}
+
+.dropdownList {
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  width: 100%;
+  z-index: 10;
+}
+
+.dropdownPrimary .dropdownList {
+  background-color: var(--color-primary);
+}
+
+.dropdownSecondary .dropdownList {
+  background-color: var(--color-neutral-800);
+  border: 2px solid var(--color-neutral-200);
+}
+
+.dropdownItem {
+  transition: 0.3s ease-in-out;
+}
+
+.dropdownItem button {
+  background-color: transparent;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.75rem;
+  text-align: left;
+  width: 100%;
+}
+
+.dropdownPrimary .dropdownItem button {
+  color: var(--color-neutral-800);
+}
+
+.dropdownPrimary .dropdownItem:hover {
+  background-color: var(--color-primary);
+  filter: brightness(0.8);
+}
+
+.dropdownSecondary .dropdownItem button {
+  color: var(--color-neutral-200);
+}
+
+.dropdownSecondary .dropdownItem:hover {
+  background-color: var(--color-neutral-700);
+}
+
+.dropdownBtn {
+  align-items: center;
+  border: none;
+  border-radius: 2rem;
+  display: flex;
+  font-size: 0.9rem;
+  font-weight: 600;
+  gap: 0.5rem;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  transition: 0.3s ease-in-out;
+  width: 100%;
+}
+
+.dropdownPrimary .dropdownBtn {
+  background-color: var(--color-primary);
+  justify-content: center;
+}
+
+.dropdownSecondary .dropdownBtn {
+  background-color: transparent;
+  border: 2px solid var(--color-neutral-200);
+  color: var(--color-neutral-200);
+}
+
+.dropdownBtn:hover {
+  cursor: pointer;
+  filter: brightness(0.7);
+}
+
+.dropdownBtn:active {
+  transform: scale(0.98);
+}

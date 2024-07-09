@@ -1,0 +1,43 @@
+.card {
+  width: 12rem;
+  transition: 0.3s ease-in-out;
+}
+
+.card:hover {
+  cursor: pointer;
+  transform: translateY(-0.5rem);
+}
+
+.img {
+  aspect-ratio: 0.7/1;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  width: 12rem;
+}
+
+.wrapper {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.creator {
+  font-size: 0.8rem;
+  font-weight: 300;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.desc {
+  overflow: hidden;
+}

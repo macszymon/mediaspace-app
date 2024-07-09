@@ -1,0 +1,33 @@
+.wrapper {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.title {
+  font-size: 1.5rem;
+}
+
+.cards {
+  align-items: center;
+  display: flex;
+  gap: 1.25rem;
+  padding: 0.75rem 0 0.5rem 0;
+  scrollbar-color: var(--color-neutral-200) var(--color-neutral-600);
+  scrollbar-width: thin;
+  overflow-x: auto;
+  margin-bottom: 2.5rem;
+}
+
+.cards::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.cards::-webkit-scrollbar-track {
+  background: var(--color-neutral-200);
+}
+
+.cards::-webkit-scrollbar-thumb {
+  background-color: var(--color-neutral-600);
+}

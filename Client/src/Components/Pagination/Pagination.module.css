@@ -1,0 +1,27 @@
+.list {
+    align-items: center;
+    display: flex;
+    gap: .5rem;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+}
+
+.btn {
+    background-color: var(--color-neutral-600);
+    border: none;
+    color: var(--color-neutral-200);
+    height: 2.25rem;
+    width: 2.25rem;
+}
+
+.btn:hover {
+    background-color: var(--color-neutral-500);
+}
+
+.btnActive, .btnActive:hover {
+    background-color: var(--color-neutral-700);
+}
+
+.hide {
+    display: none;
+}
