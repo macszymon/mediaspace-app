@@ -28,5 +28,6 @@ namespace Server.Models
         // Platforma (dla gier)
         public List<Review> Reviews { get; set; } = new List<Review>();
         public List<TitleCategory> TitleCategories { get; set; } = new List<TitleCategory>();
+        public List<TitleStatus> TitleStatuses { get; set; } = new List<TitleStatus>();
     }
 }

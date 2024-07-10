@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server.Data;
 
@@ -11,9 +12,11 @@ using Server.Data;
 namespace Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240710175002_titleStatus")]
+    partial class titleStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2150b624-95fe-48c7-9e4b-c17400b1d477",
+                            Id = "27888d78-7dcf-44f5-b4f9-bdb5de6daa95",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8b4e7e9b-5690-42bf-925c-d5c568c2d935",
+                            Id = "7d41c607-52fb-445d-a4b0-dbff52316c03",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -387,8 +390,10 @@ namespace Server.Migrations
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppUserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("EndDate")
@@ -399,7 +404,7 @@ namespace Server.Migrations
 
                     b.HasKey("TitleId", "StatusId");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppUserId1");
 
                     b.HasIndex("StatusId");
 
@@ -525,9 +530,7 @@ namespace Server.Migrations
                 {
                     b.HasOne("Server.Models.AppUser", "AppUser")
                         .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AppUserId1");
 
                     b.HasOne("Server.Models.Status", "Status")
                         .WithMany("TitleStatuses")

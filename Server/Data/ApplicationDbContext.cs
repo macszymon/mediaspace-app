@@ -20,7 +20,9 @@ namespace Server.Data
         public DbSet<Server.Models.Type> Types { get; set; }
         public DbSet<Review> Reviews{ get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Status> Statuses { get; set; }
         public DbSet<TitleCategory> TitleCategories { get; set; }
+        public DbSet<TitleStatus> TitleStatuses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -29,10 +31,16 @@ namespace Server.Data
                 u.TitleId,
                 u.CategoryId
             });
-
             builder.Entity<TitleCategory>().HasOne(u => u.Title).WithMany(u => u.TitleCategories).HasForeignKey(u => u.TitleId);
-
             builder.Entity<TitleCategory>().HasOne(u => u.Category).WithMany(u => u.TitleCategories).HasForeignKey(u => u.CategoryId);
+
+            builder.Entity<TitleStatus>().HasKey(u => new 
+            {
+                u.TitleId,
+                u.StatusId
+            });
+            builder.Entity<TitleStatus>().HasOne(u => u.Title).WithMany(u => u.TitleStatuses).HasForeignKey(u => u.TitleId);
+            builder.Entity<TitleStatus>().HasOne(u => u.Status).WithMany(u => u.TitleStatuses).HasForeignKey(u => u.StatusId);
 
             base.OnModelCreating(builder);
 
