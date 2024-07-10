@@ -17,6 +17,7 @@ namespace Server.Mappers
                 Score= reviewDto.Score,
                 Content = reviewDto.Content,
                 TitleId = reviewDto.TitleId,
+                CreatedBy = reviewDto.AppUser.UserName,
                 CreatedOn = reviewDto.CreatedOn,
             };
         }

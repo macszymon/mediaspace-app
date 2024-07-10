@@ -11,6 +11,7 @@ namespace Server.Dtos.Review
 		public int Score { get; set; }
 		public string? Content { get; set; }
         public int? TitleId { get; set; }
+        public string CreatedBy { get; set; } = string.Empty;
 		public DateTime CreatedOn { get; set; } = DateTime.Now;
     }
 }

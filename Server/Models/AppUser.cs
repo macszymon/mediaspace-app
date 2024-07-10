@@ -8,6 +8,6 @@ namespace Server.Models
 {
     public class AppUser: IdentityUser
     {
-        
+        public List<Review> Reviews { get; set; }
     }
 }

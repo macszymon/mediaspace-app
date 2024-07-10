@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Dtos.Review;
@@ -20,6 +21,14 @@ namespace Server.Repository
 
         public async Task<Review> CreateAsync(Review review)
         {
+            bool reviewExists = await _context.Reviews
+                .AnyAsync(r => r.AppUserId == review.AppUserId && r.TitleId== review.TitleId);
+
+            if (reviewExists)
+            {
+                return null;
+            }
+
             await _context.Reviews.AddAsync(review);
             await _context.SaveChangesAsync();
             return review;
@@ -42,12 +51,12 @@ namespace Server.Repository
 
         public async Task<List<Review>> GetAllAsync()
         {
-            return await _context.Reviews.ToListAsync();
+            return await _context.Reviews.Include(r => r.AppUser).ToListAsync();
         }
 
         public async Task<Review?> GetByIdAsync(int id)
         {
-            return await _context.Reviews.FindAsync(id);
+            return await _context.Reviews.Include(r => r.AppUser).FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task<Review?> UpdateAsync(int id, Review review)

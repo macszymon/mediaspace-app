@@ -2,10 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Server.Dtos.Review;
+using Server.Extensions;
 using Server.Interfaces;
 using Server.Mappers;
+using Server.Models;
 
 namespace Server.Controllers
 {
@@ -15,9 +19,11 @@ namespace Server.Controllers
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly ITitleRepository _titleRepository;
+        private readonly UserManager<AppUser> _userManager;
 
-        public ReviewController(IReviewRepository reviewRepository, ITitleRepository titleRepository)
+        public ReviewController(IReviewRepository reviewRepository, ITitleRepository titleRepository, UserManager<AppUser> userManager)
         {
+            _userManager = userManager;
             _reviewRepository = reviewRepository;
             _titleRepository = titleRepository;
         }
@@ -49,6 +55,7 @@ namespace Server.Controllers
             return Ok(review.toReviewDto());    
         }
 
+        [Authorize]
         [HttpPost("{titleId:int}")]
         public async Task<IActionResult> Create(int titleId, CreateReviewDto reviewDto)
         {
@@ -60,8 +67,19 @@ namespace Server.Controllers
                 return BadRequest("Title does not exists");
             }
 
+            var userName = User.GetUsername();
+            var AppUser = await _userManager.FindByNameAsync(userName);
+
             var review = reviewDto.toCreateReviewDto(titleId);
-            await _reviewRepository.CreateAsync(review);
+            review.AppUserId = AppUser.Id;
+            
+            review = await _reviewRepository.CreateAsync(review);
+
+            if (review == null) 
+            {
+                return BadRequest("User has already written a review for this title.");
+            }
+
             return Ok(review.toReviewDto());
         }
 

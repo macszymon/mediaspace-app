@@ -50,7 +50,7 @@ namespace Server.Repository
 
         public async Task<PaginatedResult<TitleDto>> GetAllAsync(QueryObject query)
         {
-            var titles = _context.Titles.Include(r => r.Reviews).Include(r => r.Type).AsQueryable();
+            var titles = _context.Titles.Include(t => t.Reviews).ThenInclude(r => r.AppUser).Include(r => r.Type).AsQueryable();
 
             if(!string.IsNullOrWhiteSpace(query.titleName)) 
             {
@@ -99,7 +99,7 @@ namespace Server.Repository
 
         public async Task<Title?> GetByIdAsync(int id)
         {
-            return await _context.Titles.Include(r => r.Reviews).Include(r => r.Type).FirstOrDefaultAsync(i => i.Id == id);
+            return await _context.Titles.Include(t => t.Reviews).ThenInclude(r => r.AppUser).Include(r => r.Type).FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task<Title?> UpdateAsync(int id, UpdateTitleDto titleDto)

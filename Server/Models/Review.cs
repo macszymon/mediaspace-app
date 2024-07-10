@@ -13,5 +13,7 @@ namespace Server.Models
         public int? TitleId { get; set; }
 		public Title? Title { get; set; }
 		public DateTime CreatedOn { get; set; } = DateTime.Now;
+        public string AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

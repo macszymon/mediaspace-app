@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server.Data;
 
@@ -11,9 +12,11 @@ using Server.Data;
 namespace Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240710125012_UserInreview")]
+    partial class UserInreview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2cf11c5c-548b-4761-a85d-0045a6d60ce3",
+                            Id = "cf6d4733-253c-4851-99d4-08ea68627d00",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8fdae377-7fdc-45b1-aa5c-a22d83187855",
+                            Id = "dbaad7e7-22a2-4d9e-aef6-c7e198247cb8",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -412,7 +415,7 @@ namespace Server.Migrations
             modelBuilder.Entity("Server.Models.Review", b =>
                 {
                     b.HasOne("Server.Models.AppUser", "AppUser")
-                        .WithMany("Reviews")
+                        .WithMany()
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -454,11 +457,6 @@ namespace Server.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Title");
-                });
-
-            modelBuilder.Entity("Server.Models.AppUser", b =>
-                {
-                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("Server.Models.Category", b =>
