@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Interfaces;
@@ -21,6 +22,22 @@ namespace Server.Repository
         {
             await _context.TitleCategories.AddAsync(titleCategory);
             await _context.SaveChangesAsync();
+            return titleCategory;
+        }
+
+        public async Task<TitleCategory> DeleteAsync(int titleId, int categoryId)
+        {
+            var titleCategory = await _context.TitleCategories.FirstOrDefaultAsync(x => x.TitleId == titleId && x.CategoryId == categoryId);
+
+            if (titleCategory == null)
+            {
+                return null;
+            }
+
+            _context.TitleCategories.Remove(titleCategory);
+
+            await _context.SaveChangesAsync();
+
             return titleCategory;
         }
 

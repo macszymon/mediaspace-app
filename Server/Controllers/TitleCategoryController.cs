@@ -67,5 +67,24 @@ namespace Server.Controllers
 
             return Created();
         }
+
+        [HttpDelete("{titleId}&{categoryId}")]
+        public async Task<IActionResult> DeleteTitleCategories(int titleId, int categoryId)
+        {
+            var titleCategories = await _titleCategoriesRepository.GetTitleCategories(titleId);
+
+            var filteredCategory = titleCategories.Where(c => c.Id == categoryId).ToList();
+
+            if(filteredCategory.Count() == 1)
+            {
+                await _titleCategoriesRepository.DeleteAsync(titleId, categoryId);
+            }
+            else
+            {
+                return BadRequest("Title category does not exists");
+            }
+
+            return Ok();
+        }
     }
 }

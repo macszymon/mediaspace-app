@@ -10,5 +10,7 @@ namespace Server.Interfaces
     {
         Task<List<Category>> GetTitleCategories(int titleId);
         Task<TitleCategory> CreateAsync(TitleCategory titleCategory);
+
+        Task<TitleCategory> DeleteAsync(int titleId, int categoryId);
     }
 }
