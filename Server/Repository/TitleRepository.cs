@@ -119,6 +119,13 @@ namespace Server.Repository
             title.Name = titleDto.Name;
             title.ReleaseDate = titleDto.ReleaseDate;
             title.TypeId = titleDto.TypeId;
+            title.Author = titleDto.Author;
+            title.Developer = titleDto.Developer;
+            title.Publisher = titleDto.Publisher;
+            title.Creator = titleDto.Creator;
+            title.ProductionCompany = titleDto.ProductionCompany;
+            title.Director = titleDto.Director;
+            title.Writer = titleDto.Writer;
 
             await _context.SaveChangesAsync();
 

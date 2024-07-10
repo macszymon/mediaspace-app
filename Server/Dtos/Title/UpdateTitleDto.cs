@@ -16,5 +16,12 @@ namespace Server.Dtos
         public int? NumberOfSeasons { get; set; }
         public int? MovieLength { get; set; }
         public int TypeId { get; set; }
+        public string? Author { get; set; }
+        public string? Developer { get; set; }
+        public string? Publisher { get; set; }
+        public string? Creator { get; set; }
+        public string? ProductionCompany { get; set; }
+        public string? Director { get; set; }
+        public string? Writer { get; set; }
     }
 }

@@ -18,18 +18,14 @@ namespace Server.Models
         public int? MovieLength { get; set; }
         public int TypeId { get; set; }
         public Type Type { get; set; } = null!;
-        // Gatunki
-        // // KSIAZKI
-        // Autor(dla ksaizek - osoba) [moze byc kilka]
-        // //GRY
-        // Developer (Dla gier - firma) [moze byc kilka]
+        public string? Author { get; set; }
+        public string? Developer { get; set; }
+        public string? Publisher { get; set; }
+        public string? Creator { get; set; }
+        public string? ProductionCompany { get; set; }
+        public string? Director { get; set; }
+        public string? Writer { get; set; }
         // Platforma (dla gier)
-        // Wydawca (Dla gier - firma) [moze byc kilka]
-        // // SERIALE i FILMY
-        // Tworca(dla seriali - osoba) [moze byc kilka]
-        // Producent (Dla filmow , seriali - firma) [moze byc kilka]
-        // Rezyseria (dla filmow - osoba) [moze byc kilka]
-        // Scenariusz (dla filmow - osoba) [moze byc kilka]
         public List<Review> Reviews { get; set; } = new List<Review>();
         public List<TitleCategory> TitleCategories { get; set; } = new List<TitleCategory>();
     }

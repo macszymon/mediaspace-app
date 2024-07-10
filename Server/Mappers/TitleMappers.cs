@@ -22,6 +22,13 @@ namespace Server.Mappers
                 NumberOfSeasons = title.NumberOfSeasons,
                 MovieLength = title.MovieLength,
                 TypeId = title.TypeId,
+                Author = title.Author,
+                Developer = title.Developer,
+                Publisher = title.Publisher,
+                Creator = title.Creator,
+                ProductionCompany = title.ProductionCompany,
+                Director = title.Director,
+                Writer = title.Writer,
                 Reviews = title.Reviews.Select(x => x.toReviewDto()).ToList(),
             };
         }
@@ -38,6 +45,13 @@ namespace Server.Mappers
                 NumberOfSeasons = titleDto.NumberOfSeasons,
                 MovieLength = titleDto.MovieLength,
                 TypeId = titleDto.TypeId,
+                Author = titleDto.Author,
+                Developer = titleDto.Developer,
+                Publisher = titleDto.Publisher,
+                Creator = titleDto.Creator,
+                ProductionCompany = titleDto.ProductionCompany,
+                Director = titleDto.Director,
+                Writer = titleDto.Writer,
             };
         }
     }
