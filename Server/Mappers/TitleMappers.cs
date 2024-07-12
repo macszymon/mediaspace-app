@@ -18,7 +18,7 @@ namespace Server.Mappers
                 Name = title.Name,
                 Summary = title.Summary,
                 Image = title.Image,
-                ReleaseDate = title.ReleaseDate,
+                ReleaseDate = title.ReleaseDate.ToShortDateString(),
                 Isbn = title.Isbn,
                 NumberOfSeasons = title.NumberOfSeasons,
                 MovieLength = title.MovieLength,

@@ -2,7 +2,11 @@ import styles from "./TitleDetails.module.css";
 
 import Reviews from "../../Components/Reviews/Reviews";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { api } from "../../api";
+import Spinner from "../../Components/Spinner/Spinner";
+import { Title } from "../../types";
 
 const game = {
   title: "Stardew Valley",
@@ -21,15 +25,38 @@ const game = {
 function TitleDetails() {
   const [score, setScore] = useState(7);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [title, setTitle] = useState<Title | null>(null);
+  const { id } = useParams();
 
-  return (
+  async function fetchTitle() {
+    try {
+      const response = await fetch(api + "/title/" + id);
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
+      const data = await response.json();
+      setTitle(data);
+      setLoading(false);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
+
+  useEffect(() => {
+    fetchTitle();
+  }, []);
+
+  return loading ? (
+    <Spinner />
+  ) : (
     <div className={`${styles.wrapper}`}>
       <header className={styles.header}>
-        <h1 className={styles.title}>{game.title}</h1>
-        <span className={`${styles.type}`}>{game.type}</span>
+        <h1 className={styles.title}>{title?.name}</h1>
+        <span className={`${styles.type}`}>{title?.type}</span>
       </header>
       <aside className={styles.sidebar}>
-        <img className={styles.img} src={game.imgSrc} alt="" />
+        <img className={styles.img} src={title?.image} alt="" />
         <div className={styles.actions}>
           <div className="dropdown dropdownPrimary">
             <button onClick={() => setIsAddOpen((prev) => !prev)} className="dropdownBtn">
@@ -86,23 +113,23 @@ function TitleDetails() {
           </div>
           <ul className={styles.list}>
             <li className={styles.item}>
-              Release date: <span>{game.releaseDate}</span>
+              Release date: <span>{title?.releaseDate}</span>
             </li>
             <li className={styles.item}>
-              Developer: <span>{game.creator}</span>
+              Developer: <span>{title?.developer}</span>
             </li>
             <li className={styles.item}>
               Genres: <span>{game.genres.join(", ")}</span>
             </li>
             <li className={styles.item}>
-              Platforms: <span>{game.platforms.join(", ")}</span>
+              Platforms: <span>{title?.platforms}</span>
             </li>
             <li className={styles.item}>
-              <span>{game.description}</span>
+              <span>{title?.summary}</span>
             </li>
           </ul>
         </div>
-        <Reviews score={score} />
+        <Reviews score={score} reviews={title?.reviews} />
       </section>
     </div>
   );

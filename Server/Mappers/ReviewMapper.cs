@@ -18,7 +18,7 @@ namespace Server.Mappers
                 Content = reviewDto.Content,
                 TitleId = reviewDto.TitleId,
                 CreatedBy = reviewDto.AppUser.UserName,
-                CreatedOn = reviewDto.CreatedOn,
+                CreatedOn = reviewDto.CreatedOn.ToShortDateString(),
             };
         }
         public static Review toCreateReviewDto(this CreateReviewDto reviewDto, int titleId)

@@ -5,6 +5,7 @@ import TitleDetails from "./Pages/TitleDetails/TitleDetails";
 import Footer from "./Components/Footer/Footer";
 
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import Error from "./Pages/Error/Error";
 
 const Layout = () => {
   return (
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
+    errorElement: <Error />,
     children: [
       {
         path: "/",
@@ -44,7 +46,7 @@ const router = createBrowserRouter([
         element: <Browse activeTab="TV Shows" />,
       },
       {
-        path: "/title",
+        path: "/title/:id",
         element: <TitleDetails />,
       },
       {

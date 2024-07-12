@@ -14,7 +14,7 @@ namespace Server.Dtos
         public string Name { get; set; } = String.Empty;
         public string Summary { get; set; } = String.Empty;
         public string Image { get; set; } = String.Empty;
-        public DateOnly ReleaseDate { get; set; }
+        public string ReleaseDate { get; set; } = String.Empty;
         public int? Isbn { get; set; }
         public int? NumberOfSeasons { get; set; }
         public int? MovieLength { get; set; }
