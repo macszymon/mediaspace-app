@@ -84,31 +84,39 @@ namespace Server.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
                 
-            var review = await _reviewRepository.DeleteAsync(id);
+            var userName = User.GetUsername();
+            var AppUser = await _userManager.FindByNameAsync(userName);
+
+            var review = await _reviewRepository.DeleteAsync(id, AppUser.Id);
             if (review == null) 
             {
-                return NotFound();
+                return BadRequest("Review not found or not made by the user.");
             }
 
             return NoContent();
         }
 
         [HttpPut("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> Update(int id, UpdateReviewDto reviewDto)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var review = await _reviewRepository.UpdateAsync(id, reviewDto.toUpdateReviewDto());
+            var userName = User.GetUsername();
+            var AppUser = await _userManager.FindByNameAsync(userName);
+
+            var review = await _reviewRepository.UpdateAsync(id, reviewDto, AppUser.Id);
 
             if (review == null) 
             {
-                return NotFound();
+                return BadRequest("Review not found or not made by the user.");
             }
 
             return Ok(review.toReviewDto());

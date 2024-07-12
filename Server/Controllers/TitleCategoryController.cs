@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Server.Interfaces;
@@ -15,9 +16,11 @@ namespace Server.Controllers
     public class TitleCategoryController : Controller
     {
         private readonly ITitleRepository _titleRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly ITitleCategoriesRepository _titleCategoriesRepository;
-        public TitleCategoryController(ITitleRepository titleRepository, ITitleCategoriesRepository titleCategoriesRepository)
+        public TitleCategoryController(ITitleRepository titleRepository, ITitleCategoriesRepository titleCategoriesRepository, ICategoryRepository categoryRepository)
         {
+            _categoryRepository = categoryRepository;
             _titleCategoriesRepository = titleCategoriesRepository;
             _titleRepository = titleRepository;
         }
@@ -30,10 +33,11 @@ namespace Server.Controllers
         }
 
         [HttpPost("{titleId}&{categoryId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddTitleCategories(int titleId, int categoryId)
         {
             var title = await _titleRepository.GetByIdAsync(titleId);
-            // var category = await _categoryRepository.GetByIdAsync(categoryId);
+            //var category = await _categoryRepository.GetByIdAsync(categoryId);
 
             if(title == null) 
             {
@@ -69,6 +73,7 @@ namespace Server.Controllers
         }
 
         [HttpDelete("{titleId}&{categoryId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteTitleCategories(int titleId, int categoryId)
         {
             var titleCategories = await _titleCategoriesRepository.GetTitleCategories(titleId);

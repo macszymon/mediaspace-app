@@ -55,7 +55,7 @@ namespace Server.Controllers
                             {
                                 UserName = appUser.UserName,
                                 Email = appUser.Email,
-                                Token = _tokenService.CreateToken(appUser)
+                                Token = _tokenService.CreateToken(appUser).Result,
                             }
                         );
                     }
@@ -100,7 +100,7 @@ namespace Server.Controllers
                 {
                     UserName = user.UserName,
                     Email = user.Email,
-                    Token = _tokenService.CreateToken(user)
+                    Token = _tokenService.CreateToken(user).Result,
                 }  
             );
         }

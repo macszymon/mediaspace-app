@@ -12,7 +12,7 @@ namespace Server.Interfaces
         Task<List<Review>> GetAllAsync();
         Task<Review?> GetByIdAsync(int id);
         Task<Review> CreateAsync(Review review);
-        Task<Review?> UpdateAsync(int id, Review review);
-        Task<Review?> DeleteAsync(int id);
+        Task<Review?> UpdateAsync(int id, UpdateReviewDto review, string AppUserId);
+        Task<Review?> DeleteAsync(int id, string AppUserId);
     }
 }

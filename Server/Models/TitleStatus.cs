@@ -13,7 +13,7 @@ namespace Server.Models
         public Status Status { get; set; }
         public string AppUserId { get; set; } 
         public AppUser AppUser { get; set; }  
-        public DateOnly StartDate { get; set; }
-        public DateOnly EndDate { get; set; }
+        public DateOnly? StartDate { get; set; }
+        public DateOnly? EndDate { get; set; }
     }
 }

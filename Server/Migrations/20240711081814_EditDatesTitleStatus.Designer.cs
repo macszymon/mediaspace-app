@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server.Data;
 
@@ -11,9 +12,11 @@ using Server.Data;
 namespace Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240711081814_EditDatesTitleStatus")]
+    partial class EditDatesTitleStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ccfaec9e-1146-40a9-b600-ff5966357a01",
+                            Id = "8102725f-7f9f-4d1b-aa67-b553480aec23",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "875835fd-b480-4893-8d9b-5506c2a58e56",
+                            Id = "1474690d-3ea7-4510-80fb-fb493b9cf92d",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -337,9 +340,6 @@ namespace Server.Migrations
 
                     b.Property<int?>("NumberOfSeasons")
                         .HasColumnType("int");
-
-                    b.Property<string>("Platforms")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductionCompany")
                         .HasColumnType("nvarchar(max)");

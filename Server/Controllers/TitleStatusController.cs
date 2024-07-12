@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 using Server.Data;
 using Server.Models;
 using Microsoft.Extensions.Configuration.UserSecrets;
+using Server.Dtos.TitleStatus;
+using Server.Extensions;
+using Server.Mappers;
+using Server.Interfaces;
 
 namespace YourNamespace.Controllers
 {
@@ -16,96 +20,92 @@ namespace YourNamespace.Controllers
     [ApiController]
     public class TitleStatusController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ITitleStatusRepository _titleStatusRepository;
         private readonly UserManager<AppUser> _userManager;
 
-        public TitleStatusController(ApplicationDbContext context, UserManager<AppUser> userManager)
+        public TitleStatusController(ITitleStatusRepository titleStatusRepository, UserManager<AppUser> userManager)
         {
-            _context = context;
+            _titleStatusRepository = titleStatusRepository;
             _userManager = userManager;
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult> GetUserTitleStatuses()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var titleStatuses = await _context.TitleStatuses
-                .Include(uts => uts.Title)
-                .Include(uts => uts.Status)
-                .Where(uts => uts.AppUserId == userId)
-                .ToListAsync();
+            var userName = User.GetUsername();
+            var AppUser = await _userManager.FindByNameAsync(userName);
 
-            return Ok(titleStatuses);
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var results = await _titleStatusRepository.GetAllUserStatusesAsync(AppUser.Id);
+
+            var resultsDto = results.Select(t => t.toTitleStatusDto());
+
+            return Ok(resultsDto);
         }
 
         [HttpGet("{titleId}")]
-        public async Task<ActionResult> GetById(int titleId)
+        [Authorize]
+        public async Task<ActionResult> GetByTitleId(int titleId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userTitleStatus = await _context.TitleStatuses
-                .Include(uts => uts.Title)
-                .Include(uts => uts.Status)
-                .FirstOrDefaultAsync(uts => uts.TitleId == titleId && uts.AppUserId == userId);
+            var userName = User.GetUsername();
+            var AppUser = await _userManager.FindByNameAsync(userName);
 
-            if (userTitleStatus == null)
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var titleStatus = await _titleStatusRepository.GetByIdAsync(AppUser.Id, titleId);
+
+            if (titleStatus == null) 
             {
                 return NotFound();
             }
 
-            return Ok(userTitleStatus);
+            return Ok(titleStatus.toTitleStatusDto());
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(TitleStatus titleStatus)
+        [Authorize]
+        public async Task<ActionResult> Create(CreateTitleStatusDto titleStatusDto)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            titleStatus.AppUserId = userId;
+            var userName = User.GetUsername();
+            var AppUser = await _userManager.FindByNameAsync(userName);
 
-            _context.TitleStatuses.Add(titleStatus);
-            await _context.SaveChangesAsync();
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var titleStatus = titleStatusDto.toCreateTitleStatusDto();
+
+            titleStatus = await _titleStatusRepository.CreateAsync(AppUser.Id, titleStatus);
+
+            if (titleStatus == null)
+            {
+                return BadRequest("User already has a status for this title!");
+            }
 
             return Ok(titleStatus);
         }
 
         [HttpDelete("{titleId}")]
-        public async Task<IActionResult> DeleteUserTitleStatus(int titleId)
+        [Authorize]
+        public async Task<IActionResult> Delete(int titleId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userTitleStatus = await _context.TitleStatuses.FirstOrDefaultAsync(uts => uts.TitleId == titleId && uts.AppUserId == userId);
-            if (userTitleStatus == null)
+            var userName = User.GetUsername();
+            var AppUser = await _userManager.FindByNameAsync(userName);
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var title = await _titleStatusRepository.DeleteAsync(AppUser.Id, titleId);
+
+            if (title == null) 
             {
                 return NotFound();
             }
 
-            _context.TitleStatuses.Remove(userTitleStatus);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        [HttpPut("{titleId}")]
-        public async Task<IActionResult> PutUserTitleStatus(int titleId, TitleStatus titleStatus)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var titleStatusModel = await _context.TitleStatuses.FirstOrDefaultAsync(x => x.TitleId == titleId && x.AppUserId == userId);
-
-            if (titleStatusModel == null)
-            {
-                return BadRequest();
-            }
-
-            titleStatusModel.Status = titleStatus.Status;
-
-            _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool UserTitleStatusExists(int titleId)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return _context.TitleStatuses.Any(e => e.TitleId == titleId && e.AppUserId == userId);
         }
     }
 }

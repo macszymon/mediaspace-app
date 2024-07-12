@@ -8,8 +8,9 @@ namespace Server.Interfaces
 {
     public interface ITitleStatusRepository
     {
-        Task<List<Status>> GetAllUserStatusesAsync(int titleId);
-        Task<TitleStatus> CreateAsync(TitleStatus titleStatus);
-        Task<TitleStatus> DeleteAsync(TitleStatus titleStatus);        
+        Task<List<TitleStatus>> GetAllUserStatusesAsync(string AppUserId);
+        Task<TitleStatus> GetByIdAsync(string AppUserId,int titleId);
+        Task<TitleStatus> CreateAsync(string AppUserId, TitleStatus titleStatus);
+        Task<TitleStatus> DeleteAsync(string AppUserId,int titleId);        
     }
 }

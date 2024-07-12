@@ -8,6 +8,6 @@ namespace Server.Dtos.Review
     public class UpdateReviewDto
     {
   		public int Score { get; set; }
-		public string? Content { get; set; }      
+		  public string? Content { get; set; }      
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
@@ -51,6 +52,7 @@ namespace Server.Controllers
         } 
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateTitleDto titleDto)
         {
             if(!ModelState.IsValid)
@@ -62,6 +64,7 @@ namespace Server.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, UpdateTitleDto titleDto) 
         {
             if(!ModelState.IsValid)
@@ -78,6 +81,7 @@ namespace Server.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             if(!ModelState.IsValid)

@@ -34,9 +34,9 @@ namespace Server.Repository
             return review;
         }
 
-        public async Task<Review?> DeleteAsync(int id)
+        public async Task<Review?> DeleteAsync(int id, string AppUserId)
         {
-            var review = await _context.Reviews.FirstOrDefaultAsync(x => x.Id == id);
+            var review = await _context.Reviews.FirstOrDefaultAsync(x => x.Id == id && x.AppUserId == AppUserId);
 
             if (review == null) 
             {
@@ -59,17 +59,17 @@ namespace Server.Repository
             return await _context.Reviews.Include(r => r.AppUser).FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task<Review?> UpdateAsync(int id, Review review)
+        public async Task<Review?> UpdateAsync(int id, UpdateReviewDto reviewDto, string AppUserId)
         {
-            var oldReview = await _context.Reviews.FirstOrDefaultAsync(x => x.Id == id);
+            var review = await _context.Reviews.Include(r => r.AppUser).FirstOrDefaultAsync(x => x.Id == id && x.AppUserId == AppUserId);
 
-            if (oldReview == null) 
+            if (review == null) 
             {
                 return null;
             }
 
-            oldReview.Score = review.Score;
-            oldReview.Content = review.Content;
+            review.Score = reviewDto.Score;
+            review.Content = reviewDto.Content;
 
             await _context.SaveChangesAsync();
 

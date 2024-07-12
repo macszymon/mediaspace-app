@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Server.Dtos;
+using Server.Dtos.Category;
 using Server.Models;
 
 namespace Server.Mappers
@@ -21,7 +22,7 @@ namespace Server.Mappers
                 Isbn = title.Isbn,
                 NumberOfSeasons = title.NumberOfSeasons,
                 MovieLength = title.MovieLength,
-                TypeId = title.TypeId,
+                Type = title.Type.Name,
                 Author = title.Author,
                 Developer = title.Developer,
                 Publisher = title.Publisher,
@@ -29,6 +30,12 @@ namespace Server.Mappers
                 ProductionCompany = title.ProductionCompany,
                 Director = title.Director,
                 Writer = title.Writer,
+                Platforms = title.Platforms,
+                Categories = title.TitleCategories.Select(tc => new CategoryDto
+                {
+                    Id = tc.Category.Id,
+                    Name = tc.Category.Name
+                }).ToList(),
                 Reviews = title.Reviews.Select(x => x.toReviewDto()).ToList(),
             };
         }
@@ -52,6 +59,7 @@ namespace Server.Mappers
                 ProductionCompany = titleDto.ProductionCompany,
                 Director = titleDto.Director,
                 Writer = titleDto.Writer,
+                Platforms = titleDto.Platforms,
             };
         }
     }

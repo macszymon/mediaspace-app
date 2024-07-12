@@ -23,5 +23,6 @@ namespace Server.Dtos
         public string? ProductionCompany { get; set; }
         public string? Director { get; set; }
         public string? Writer { get; set; }
+        public string? Platforms { get; set; }
     }
 }
