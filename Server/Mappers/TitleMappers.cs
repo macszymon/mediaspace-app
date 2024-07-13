@@ -31,6 +31,7 @@ namespace Server.Mappers
                 Director = title.Director,
                 Writer = title.Writer,
                 Platforms = title.Platforms,
+                AvgScore = title.Reviews.Any() ? title.Reviews.Average(s => s.Score) : null,
                 Categories = title.TitleCategories.Select(tc => new CategoryDto
                 {
                     Id = tc.Category.Id,

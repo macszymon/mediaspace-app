@@ -3,103 +3,121 @@ import styles from "./Browse.module.css";
 import Card from "../../Components/Card/Card";
 
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { TiArrowSortedDown } from "react-icons/ti";
 import Pagination from "../../Components/Pagination/Pagination";
+import { api } from "../../api";
+import { Title } from "../../types";
+import Spinner from "../../Components/Spinner/Spinner";
 
 interface Props {
-  activeTab: "Books" | "Games" | "Movies" | "TV Shows";
+  type: "Book" | "Game" | "Movie" | "TV Show";
 }
 
-function Browse({ activeTab }: Props) {
-  const [active, setActive] = useState(activeTab);
+function Browse({ type }: Props) {
+  const [active, setActive] = useState(type);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const [loading, setLoading] = useState(false);
-  const [titles, setTitles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [titles, setTitles] = useState<Title[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(20);
-  const [totalPages, setTotalPages] = useState(10);
+  const [postsPerPage, setPostsPerPage] = useState(0);
+  const [totalTitles, setTotalTitles] = useState(0)
+  const [totalPages, setTotalPages] = useState(0);
+  const {sort} = useParams();
 
   const handlePageChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const button = e.target as HTMLButtonElement;
     setCurrentPage(parseInt(button.value));
   };
 
-  useEffect(() => {
-    setActive(activeTab);
-  }, [activeTab]);
+  async function fetchTitle() {
+    try {
+      const response = await fetch(api + "/title/?type=" + type + "&pageNumber=" + currentPage + "&sortBy=" + sort + "&isDescending=true");
+      if (!response.ok) {
+        throw new Error("Getting titles failded");
+      }
+      const data = await response.json();
+      setTitles(data.items);
+      setPostsPerPage(data.pageSize);
+      setTotalPages(data.totalPages);
+      setTotalTitles(data.totalCount)
+      setLoading(false);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
 
-  return (
+  useEffect(() => {
+    setLoading(true);
+    setCurrentPage(1);
+    setPostsPerPage(0);
+    setTotalTitles(0);
+    setTotalPages(0);
+    fetchTitle();
+    setActive(type);
+  }, [type]);
+
+  useEffect(() => {
+    setLoading(true);
+    fetchTitle();
+  }, [currentPage, sort]);
+
+  return loading ? (
+    <Spinner />
+  ) : (
     <>
       <header className={styles.header}>
-        <h1 className={styles.title}>Best {active}</h1>
+        <h1 className={styles.title}>{sort === "score" ? "Best" : "New"} {active + "s"}</h1>
         <ul className={styles.list}>
           <li className={styles.item}>
-            <Link to="/books" className={`${styles.link} ${active === "Books" ? styles.linkActive : ""}`}>
+            <Link to="/books" className={`${styles.link} ${active === "Book" ? styles.linkActive : ""}`}>
               Books
             </Link>
           </li>
           <li className={styles.item}>
-            <Link to="/games" className={`${styles.link} ${active === "Games" ? styles.linkActive : ""}`}>
+            <Link to="/games" className={`${styles.link} ${active === "Game" ? styles.linkActive : ""}`}>
               Games
             </Link>
           </li>
           <li className={styles.item}>
-            <Link to="/movies" className={`${styles.link} ${active === "Movies" ? styles.linkActive : ""}`}>
+            <Link to="/movies" className={`${styles.link} ${active === "Movie" ? styles.linkActive : ""}`}>
               Movies
             </Link>
           </li>
           <li className={styles.item}>
-            <Link to="/shows" className={`${styles.link} ${active === "TV Shows" ? styles.linkActive : ""}`}>
+            <Link to="/shows" className={`${styles.link} ${active === "TV Show" ? styles.linkActive : ""}`}>
               TV Shows
             </Link>
           </li>
         </ul>
-        <div className={styles.wrapper}>
-          <h3 className={styles.results}>145 Result</h3>
-          <div className={"dropdown dropdownSecondary"}>
-            <button onClick={() => setIsDropdownOpen((prev) => !prev)} className={"dropdownBtn dropdownBtnSecondary"}>
-              Sort by: Score <TiArrowSortedDown />
-            </button>
-            {isDropdownOpen && (
-              <ul className="dropdownList">
-                <li className="dropdownItem">
-                  <button>Score</button>
-                </li>
-                <li className="dropdownItem">
-                  <button>Recent</button>
-                </li>
-              </ul>
-            )}
+        {titles?.length > 0 ? (
+          <div className={styles.wrapper}>
+            <h3 className={styles.results}>{totalTitles} Results</h3>
+            <div className={"dropdown dropdownSecondary"}>
+              <button onClick={() => setIsDropdownOpen((prev) => !prev)} className={"dropdownBtn dropdownBtnSecondary"}>
+                Sort by: {sort === "score" ? "Score" : "Recent"} <TiArrowSortedDown />
+              </button>
+              {isDropdownOpen && (
+                <ul className="dropdownList">
+                  <li className="dropdownItem">
+                    <Link to={"/" + type + "s/score"}>Score</Link>
+                  </li>
+                  <li className="dropdownItem">
+                    <Link to={"/" + type + "s/releaseDate"}>Recent</Link>
+                  </li>
+                </ul>
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <h3 className={styles.notFound}>No {type + "s"} found</h3>
+        )}
       </header>
       <section className={styles.cards}>
-        <Card image="https://i.etsystatic.com/19645555/r/il/f9a391/3205787491/il_1080xN.3205787491_ay6k.jpg" title="Stardew Valley" score={0} creator="Concerned Ape" />
-        <Card image="https://cdn2.steamgriddb.com/grid/5cdf5c84489e801e6bac5693b1c8e290.png" title="Baldur's Gate 3" score={3.9} creator="Larian Studios" />
-        <Card image="https://m.media-amazon.com/images/I/81YhQfeiynL._AC_UF894,1000_QL80_.jpg" title="The Secret History" score={6.4} creator="Donna Tartt" />
-        <Card image="https://anylang.net/sites/default/files/covers/1984_3.jpg" title="1984" score={9.7} creator="George Orwell" />
-        <Card image="https://artofthemovies.co.uk/cdn/shop/products/IMG_6306-977692_1024x1024@2x.jpg?v=1633755210" title="Dune" score={8.7} creator="Warner Bros" />
-        <Card image="https://i.ebayimg.com/00/s/MTA4MFg3MjA=/z/6OYAAOSw-CxjDMUp/$_12.JPG?set_id=880000500F" title="The Office (US)" score={5.8} creator="NBC Universal Television" />
-        <Card image="https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p23659856_b_v13_aa.jpg" title="Break Point" score={2.8} creator="Netflix" />
-        <Card image="https://i.etsystatic.com/19645555/r/il/f9a391/3205787491/il_1080xN.3205787491_ay6k.jpg" title="Stardew Valley" score={0} creator="Concerned Ape" />
-        <Card image="https://cdn2.steamgriddb.com/grid/5cdf5c84489e801e6bac5693b1c8e290.png" title="Baldur's Gate 3" score={3.9} creator="Larian Studios" />
-        <Card image="https://m.media-amazon.com/images/I/81YhQfeiynL._AC_UF894,1000_QL80_.jpg" title="The Secret History" score={6.4} creator="Donna Tartt" />
-        <Card image="https://anylang.net/sites/default/files/covers/1984_3.jpg" title="1984" score={9.7} creator="George Orwell" />
-        <Card image="https://artofthemovies.co.uk/cdn/shop/products/IMG_6306-977692_1024x1024@2x.jpg?v=1633755210" title="Dune" score={8.7} creator="Warner Bros" />
-        <Card image="https://i.ebayimg.com/00/s/MTA4MFg3MjA=/z/6OYAAOSw-CxjDMUp/$_12.JPG?set_id=880000500F" title="The Office (US)" score={5.8} creator="NBC Universal Television" />
-        <Card image="https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p23659856_b_v13_aa.jpg" title="Break Point" score={2.8} creator="Netflix" />
-        <Card image="https://i.etsystatic.com/19645555/r/il/f9a391/3205787491/il_1080xN.3205787491_ay6k.jpg" title="Stardew Valley" score={0} creator="Concerned Ape" />
-        <Card image="https://cdn2.steamgriddb.com/grid/5cdf5c84489e801e6bac5693b1c8e290.png" title="Baldur's Gate 3" score={3.9} creator="Larian Studios" />
-        <Card image="https://m.media-amazon.com/images/I/81YhQfeiynL._AC_UF894,1000_QL80_.jpg" title="The Secret History" score={6.4} creator="Donna Tartt" />
-        <Card image="https://anylang.net/sites/default/files/covers/1984_3.jpg" title="1984" score={9.7} creator="George Orwell" />
-        <Card image="https://artofthemovies.co.uk/cdn/shop/products/IMG_6306-977692_1024x1024@2x.jpg?v=1633755210" title="Dune" score={8.7} creator="Warner Bros" />
-        <Card image="https://i.ebayimg.com/00/s/MTA4MFg3MjA=/z/6OYAAOSw-CxjDMUp/$_12.JPG?set_id=880000500F" title="The Office (US)" score={5.8} creator="NBC Universal Television" />
-        <Card image="https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p23659856_b_v13_aa.jpg" title="Break Point" score={2.8} creator="Netflix" />
-        <Card image="https://anylang.net/sites/default/files/covers/1984_3.jpg" title="1984" score={9.7} creator="George Orwell" />
-        <Card image="https://artofthemovies.co.uk/cdn/shop/products/IMG_6306-977692_1024x1024@2x.jpg?v=1633755210" title="Dune" score={8.7} creator="Warner Bros" />
-        <Card image="https://i.ebayimg.com/00/s/MTA4MFg3MjA=/z/6OYAAOSw-CxjDMUp/$_12.JPG?set_id=880000500F" title="The Office (US)" score={5.8} creator="NBC Universal Television" />
+        {titles?.map((title) => {
+          return <Card id={title.id} image={title.image} title={title.name} score={title.avgScore} creator={title.type === "Book" ? title.author : title.type === "Game" ? title.developer : title.productionCompany} />;
+        })}
       </section>
       {totalPages > 1 && <Pagination totalPages={totalPages} handlePageChange={handlePageChange} currentPage={currentPage} />}
     </>

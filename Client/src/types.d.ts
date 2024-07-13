@@ -27,9 +27,15 @@ export type Title = {
   director: string;
   writer: string;
   platforms: string;
-  categories: [];
+  avgScore: number;
+  categories: Category[];
   reviews: ReviewType[];
 };
+
+export type Category = {
+  id: number;
+  name: string;
+}
 
 export type ReviewType = {
   id: number;

@@ -11,6 +11,7 @@ namespace Server.Helpers
         public string? type { get; set; } = null;
         public string? sortBy { get; set; } = null;
         public bool isDescending { get; set; } = false;
+        public bool fromCurrentYear {get; set; } = false;
         public int pageNumber { get; set; } = 1;
         public int pageSize { get; set; } = 24;
     }

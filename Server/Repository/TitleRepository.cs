@@ -62,6 +62,11 @@ namespace Server.Repository
                 titles = titles.Where(t => t.Type.Name.Contains(query.type));
             }
 
+            if(query.fromCurrentYear)
+            {
+                titles = titles.Where(t => t.ReleaseDate.Year == DateTime.Now.Year - 1);
+            }
+
             if(!string.IsNullOrWhiteSpace(query.sortBy)) 
             {
                 if(query.sortBy.Equals("score", StringComparison.OrdinalIgnoreCase))

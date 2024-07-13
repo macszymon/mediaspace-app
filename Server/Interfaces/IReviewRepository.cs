@@ -9,10 +9,10 @@ namespace Server.Interfaces
 {
     public interface IReviewRepository
     {
-        Task<List<Review>> GetAllAsync();
-        Task<Review?> GetByIdAsync(int id);
+        Task<List<Review>> GetAllAsync(string AppUserId);
+        Task<Review?> GetByIdAsync(int titleId, string AppUserId);
         Task<Review> CreateAsync(Review review);
-        Task<Review?> UpdateAsync(int id, UpdateReviewDto review, string AppUserId);
+        Task<Review?> UpdateAsync(int titleId, UpdateReviewDto review, string AppUserId);
         Task<Review?> DeleteAsync(int id, string AppUserId);
     }
 }

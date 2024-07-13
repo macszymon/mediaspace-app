@@ -49,19 +49,19 @@ namespace Server.Repository
             return review;
         }
 
-        public async Task<List<Review>> GetAllAsync()
+        public async Task<List<Review>> GetAllAsync(string AppUserId)
         {
-            return await _context.Reviews.Include(r => r.AppUser).ToListAsync();
+            return await _context.Reviews.Include(r => r.AppUser).Where(r => r.AppUserId == AppUserId).ToListAsync();
         }
 
-        public async Task<Review?> GetByIdAsync(int id)
+        public async Task<Review?> GetByIdAsync(int titleId, string AppUserId)
         {
-            return await _context.Reviews.Include(r => r.AppUser).FirstOrDefaultAsync(r => r.Id == id);
+            return await _context.Reviews.Include(r => r.AppUser).FirstOrDefaultAsync(r => r.TitleId == titleId && r.AppUserId == AppUserId);
         }
 
-        public async Task<Review?> UpdateAsync(int id, UpdateReviewDto reviewDto, string AppUserId)
+        public async Task<Review?> UpdateAsync(int titleId, UpdateReviewDto reviewDto, string AppUserId)
         {
-            var review = await _context.Reviews.Include(r => r.AppUser).FirstOrDefaultAsync(x => x.Id == id && x.AppUserId == AppUserId);
+            var review = await _context.Reviews.Include(r => r.AppUser).FirstOrDefaultAsync(x => x.TitleId == titleId && x.AppUserId == AppUserId);
 
             if (review == null) 
             {

@@ -15,7 +15,7 @@ namespace Server.Dtos
         public string Summary { get; set; } = String.Empty;
         public string Image { get; set; } = String.Empty;
         public string ReleaseDate { get; set; } = String.Empty;
-        public int? Isbn { get; set; }
+        public string? Isbn { get; set; }
         public int? NumberOfSeasons { get; set; }
         public int? MovieLength { get; set; }
         public string Type { get; set; }   
@@ -27,6 +27,7 @@ namespace Server.Dtos
         public string? Director { get; set; }
         public string? Writer { get; set; }
         public string? Platforms { get; set; }
+        public double? AvgScore {get; set;}
         public List<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
         public List<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();
     }

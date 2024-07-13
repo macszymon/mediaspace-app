@@ -6,10 +6,9 @@ function Home() {
   return (
     <>
       <ProgressSection />
-      <CardsSlider header="New releases" />
-      <CardsSlider header="Waiting for you" />
+      <CardsSlider header="New releases" sort="releaseDate" />
       <BestSection />
-      <CardsSlider header="Top picks" />
+      <CardsSlider header="Top picks" sort="score" />
     </>
   );
 }

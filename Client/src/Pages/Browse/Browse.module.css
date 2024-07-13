@@ -55,6 +55,15 @@
     margin-block: 2rem 3rem;
   }
 
+.notFound {
+  align-items: center;
+  display: flex;
+  font-size: 2rem;
+  justify-content: center;
+  min-height: 30vh;
+  text-align: center;
+}
+ 
   @media (min-width: 400px) {
     .list {
         gap: 2rem;

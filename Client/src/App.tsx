@@ -30,20 +30,20 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/books",
-        element: <Browse activeTab="Books" />,
+        path: "/books/:sort?",
+        element: <Browse type="Book" />,
       },
       {
-        path: "/games",
-        element: <Browse activeTab="Games" />,
+        path: "/games/:sort?",
+        element: <Browse type="Game" />,
       },
       {
         path: "/movies",
-        element: <Browse activeTab="Movies" />,
+        element: <Browse type="Movie" />,
       },
       {
         path: "/shows",
-        element: <Browse activeTab="TV Shows" />,
+        element: <Browse type="TV Show" />,
       },
       {
         path: "/title/:id",

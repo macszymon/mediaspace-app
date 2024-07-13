@@ -3,15 +3,16 @@ import styles from "./Card.module.css";
 import { Link } from "react-router-dom";
 
 interface Props {
+  id: number;
   image: string;
   title: string;
   score: number;
   creator: string;
 }
 
-function Card({ image, title, score, creator }: Props) {
+function Card({ id, image, title, score, creator }: Props) {
   return (
-    <Link to="/title" className={styles.card}>
+    <Link to={"/title/" + id} className={styles.card}>
       <img className={styles.img} src={image} alt="" />
       <div className={styles.wrapper}>
         <div className={styles.desc}>

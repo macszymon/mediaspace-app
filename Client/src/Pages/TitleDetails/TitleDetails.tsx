@@ -8,20 +8,6 @@ import { api } from "../../api";
 import Spinner from "../../Components/Spinner/Spinner";
 import { Title } from "../../types";
 
-const game = {
-  title: "Stardew Valley",
-  imgSrc: "https://i.etsystatic.com/19645555/r/il/f9a391/3205787491/il_1080xN.3205787491_ay6k.jpg",
-  score: 5.8,
-  scoresCount: 717,
-  type: "Game",
-  releaseDate: "Dec 12, 2023",
-  creator: "ConcernedApe",
-  genres: ["Farm life sim", "RPG"],
-  platforms: ["PC", "Nindendo Switch", "PS5", "XBOX Series X"],
-  description:
-    "You've inherited your grandfather's old farm plot in Stardew Valley. Armed with hand-me-down tools and a few coins, you set out to begin your new life. Can you learn to live off the land and turn these overgrown fields into a thriving home? It won't be easy. Ever since Joja Corporation came to town, the old ways of life have all but disappeared. The community center, once the town's most vibrant hub of activity, now lies in shambles. But the valley seems full of opportunity. With a little dedication, you might just be the one to restore Stardew Valley to greatness!",
-};
-
 function TitleDetails() {
   const [score, setScore] = useState(7);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -33,7 +19,7 @@ function TitleDetails() {
     try {
       const response = await fetch(api + "/title/" + id);
       if (!response.ok) {
-        throw new Error("Login failed");
+        throw new Error("getting title failed");
       }
       const data = await response.json();
       setTitle(data);
@@ -104,29 +90,84 @@ function TitleDetails() {
       <section className={styles.content}>
         <div className={styles.details}>
           <div className={styles.usersScore}>
-            <div className={`${!game.score ? "score--none" : game.score >= 7 ? "score--good" : game.score >= 4 ? "score--medium" : "score--bad"} score`}>{!game.score ? "-" : game.score}</div>
+            <div className={`${!title?.avgScore ? "score--none" : title?.avgScore >= 7 ? "score--good" : title?.avgScore >= 4 ? "score--medium" : "score--bad"} score`}>{!title?.avgScore ? "-" : title?.avgScore}</div>
             <div className={styles.scoreText}>
               <strong>User score</strong>
               <br />
-              <span>Based on {game.scoresCount} ratings</span>
+              <span>Based on {title?.reviews.length} ratings</span>
             </div>
           </div>
           <ul className={styles.list}>
-            <li className={styles.item}>
-              Release date: <span>{title?.releaseDate}</span>
-            </li>
-            <li className={styles.item}>
-              Developer: <span>{title?.developer}</span>
-            </li>
-            <li className={styles.item}>
-              Genres: <span>{game.genres.join(", ")}</span>
-            </li>
-            <li className={styles.item}>
-              Platforms: <span>{title?.platforms}</span>
-            </li>
-            <li className={styles.item}>
-              <span>{title?.summary}</span>
-            </li>
+            {title?.author && (
+              <li className={styles.item}>
+                Author: <span>{title?.author}</span>
+              </li>
+            )}
+            {title?.developer && (
+              <li className={styles.item}>
+                Developer: <span>{title?.developer}</span>
+              </li>
+            )}
+            {title?.publisher && (
+              <li className={styles.item}>
+                Publisher: <span>{title?.publisher}</span>
+              </li>
+            )}
+            {title?.creator && (
+              <li className={styles.item}>
+                Created By: <span>{title?.creator}</span>
+              </li>
+            )}
+            {title?.director && (
+              <li className={styles.item}>
+                Directed by: <span>{title?.director}</span>
+              </li>
+            )}
+            {title?.writer && (
+              <li className={styles.item}>
+                Written By: <span>{title?.writer}</span>
+              </li>
+            )}
+            {title?.releaseDate && (
+              <li className={styles.item}>
+                Release date: <span>{title?.releaseDate}</span>
+              </li>
+            )}
+            {title?.productionCompany && (
+              <li className={styles.item}>
+                Production Company: <span>{title?.productionCompany}</span>
+              </li>
+            )}
+            {title?.isbn && (
+              <li className={styles.item}>
+                Isbn: <span>{title?.isbn}</span>
+              </li>
+            )}
+            {title?.numberOfSeasons && (
+              <li className={styles.item}>
+                Number of seasons: <span>{title?.numberOfSeasons}</span>
+              </li>
+            )}
+            {title?.movieLength && (
+              <li className={styles.item}>
+                Duration: <span>{title?.movieLength} min</span>
+              </li>
+            )}
+            {title?.categories && (
+              <li className={styles.item}>
+                Genres: <span> {title?.categories.map((category) => category.name).join(", ")}</span>
+              </li>
+            )}
+            {title?.platforms && (
+              <li className={styles.item}>
+                Platfroms: <span>{title?.platforms}</span>
+              </li>
+            )}
+            {title?.summary && (
+              <li className={styles.item}>
+                <span>{title?.summary}</span>
+              </li>
+            )}
           </ul>
         </div>
         <Reviews score={score} reviews={title?.reviews} />

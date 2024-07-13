@@ -29,23 +29,31 @@ namespace Server.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll() 
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var reviews = await _reviewRepository.GetAllAsync();
+            var userName = User.GetUsername();
+            var AppUser = await _userManager.FindByNameAsync(userName);
+
+            var reviews = await _reviewRepository.GetAllAsync(AppUser.Id);
             var reviewDto = reviews.Select(r => r.toReviewDto());
             return Ok(reviewDto);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{titleId}")]
+        [Authorize]
+        public async Task<IActionResult> GetByTitleId(int titleId)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var review = await _reviewRepository.GetByIdAsync(id);
+            var userName = User.GetUsername();
+            var AppUser = await _userManager.FindByNameAsync(userName);
+
+            var review = await _reviewRepository.GetByIdAsync(titleId, AppUser.Id);
 
             if (review == null)
             {
@@ -102,9 +110,9 @@ namespace Server.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{titleId:int}")]
         [Authorize]
-        public async Task<IActionResult> Update(int id, UpdateReviewDto reviewDto)
+        public async Task<IActionResult> Update(int titleId, UpdateReviewDto reviewDto)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -112,7 +120,7 @@ namespace Server.Controllers
             var userName = User.GetUsername();
             var AppUser = await _userManager.FindByNameAsync(userName);
 
-            var review = await _reviewRepository.UpdateAsync(id, reviewDto, AppUser.Id);
+            var review = await _reviewRepository.UpdateAsync(titleId, reviewDto, AppUser.Id);
 
             if (review == null) 
             {

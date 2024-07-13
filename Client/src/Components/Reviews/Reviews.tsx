@@ -8,7 +8,7 @@ import { ReviewType } from "../../types";
 
 interface Props {
   score: number;
-  reviews?: ReviewType[]
+  reviews?: ReviewType[];
 }
 
 function Reviews({ score, reviews }: Props) {
@@ -16,12 +16,23 @@ function Reviews({ score, reviews }: Props) {
   const [isReviewed, setIsReviewed] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [reviewsNumber, setReviewsNumber] = useState(0);
 
   useEffect(() => {
     if (!score) {
       setIsReviewed(false);
     }
   }, [score]);
+
+  useEffect(() => {
+    let count = 0;
+
+    reviews?.forEach((review) => {
+      review.content && count++;
+    });
+
+    setReviewsNumber(count);
+  }, []);
 
   const handleReviewAdd = () => {
     if (score) {
@@ -64,52 +75,59 @@ function Reviews({ score, reviews }: Props) {
           </>
         )}
       </div>
-      <div className={styles.info}>
-        <div>
-          <h3 className={styles.subtitle}>{reviews?.length} User Reviews</h3>
-        </div>
-        <div className={styles.filters}>
-          <div className={"dropdown dropdownSecondary"}>
-            <button onClick={() => setIsFilterOpen((prev) => !prev)} className={"dropdownBtn dropdownBtnSecondary"}>
-              Filter: All <TiArrowSortedDown />
-            </button>
-            {isFilterOpen && (
-              <ul className="dropdownList">
-                <li className="dropdownItem">
-                  <button>All</button>
-                </li>
-                <li className="dropdownItem">
-                  <button>Positive</button>
-                </li>
-                <li className="dropdownItem">
-                  <button>Mixed</button>
-                </li>
-                <li className="dropdownItem">
-                  <button>Negative</button>
-                </li>
-              </ul>
-            )}
+      {reviewsNumber ? (
+        <>
+          <div className={styles.info}>
+            <h3 className={styles.subtitle}>{reviewsNumber} User Reviews</h3>
+            <div className={styles.filters}>
+              <div className={"dropdown dropdownSecondary"}>
+                <button onClick={() => setIsFilterOpen((prev) => !prev)} className={"dropdownBtn dropdownBtnSecondary"}>
+                  Filter: All <TiArrowSortedDown />
+                </button>
+                {isFilterOpen && (
+                  <ul className="dropdownList">
+                    <li className="dropdownItem">
+                      <button>All</button>
+                    </li>
+                    <li className="dropdownItem">
+                      <button>Positive</button>
+                    </li>
+                    <li className="dropdownItem">
+                      <button>Mixed</button>
+                    </li>
+                    <li className="dropdownItem">
+                      <button>Negative</button>
+                    </li>
+                  </ul>
+                )}
+              </div>
+              <div className={"dropdown dropdownSecondary"}>
+                <button onClick={() => setIsSortOpen((prev) => !prev)} className={"dropdownBtn dropdownBtnSecondary"}>
+                  Sort by: Score <TiArrowSortedDown />
+                </button>
+                {isSortOpen && (
+                  <ul className="dropdownList">
+                    <li className="dropdownItem">
+                      <button>Score</button>
+                    </li>
+                    <li className="dropdownItem">
+                      <button>Recent</button>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </div>
           </div>
-          <div className={"dropdown dropdownSecondary"}>
-            <button onClick={() => setIsSortOpen((prev) => !prev)} className={"dropdownBtn dropdownBtnSecondary"}>
-              Sort by: Score <TiArrowSortedDown />
-            </button>
-            {isSortOpen && (
-              <ul className="dropdownList">
-                <li className="dropdownItem">
-                  <button>Score</button>
-                </li>
-                <li className="dropdownItem">
-                  <button>Recent</button>
-                </li>
-              </ul>
-            )}
-          </div>
-        </div>
-      </div>
-      {reviews?.length ? reviews.map(review => {
-        return <Review user={review.createdBy} date={review.createdOn} score={review.score} description={review.content} />
-      }) : <h3 className={styles.subtitle}>No user reviews</h3>}
+          {reviews?.map((review) => {
+            return review.content ? <Review user={review.createdBy} date={review.createdOn} score={review.score} description={review.content} /> : null;
+          })}
+        </>
+      ) : (
+        <>
+          <h3 className={styles.subtitle}>User Reviews</h3>
+          <h3 className={styles.notFound}>No reviews found</h3>
+        </>
+      )}
     </section>
   );
 }
