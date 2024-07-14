@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { TiArrowSortedDown } from "react-icons/ti";
 import Pagination from "../../Components/Pagination/Pagination";
-import { api } from "../../api";
 import { Title } from "../../types";
 import Spinner from "../../Components/Spinner/Spinner";
+import { api } from "../../Context/useAuth";
 
 interface Props {
   type: "Book" | "Game" | "Movie" | "Show";

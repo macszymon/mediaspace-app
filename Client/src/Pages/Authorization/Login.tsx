@@ -8,16 +8,14 @@ type Props = {};
 function Login({}: Props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const { user, loginUser, errorMessage } = useAuth();
   const navigate = useNavigate();
-  const { user, loginUser } = useAuth();
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     loginUser(username, password);
     setUsername("");
     setPassword("");
-    !user && setErrorMessage("Invalid user name and/or password");
   };
 
   useEffect(() => {

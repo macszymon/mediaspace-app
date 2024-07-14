@@ -1,11 +1,11 @@
 import styles from "./CardsSlider.module.css";
 
 import Card from "../Card/Card";
-import { api } from "../../api";
 import { useEffect, useState } from "react";
 import { Title } from "../../types";
 import Spinner from "../Spinner/Spinner";
 import { Link } from "react-router-dom";
+import { api } from "../../Context/useAuth";
 
 interface Props {
   header: string;

@@ -50,8 +50,27 @@
     background-color: var(--color-tertiary);
 }
 
+.notLoggedIn {
+    background-color: var(--color-primary);
+    border-radius: .5rem;
+    color: var(--color-neutral-800);
+    margin-bottom: 2.5rem;
+    padding: 2rem;
+    text-align: center;
+}
+
+.notLoggedIn h4 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: .5rem;
+}
+
 @media (min-width: 700px) {
     .wrapper {
         grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .notLoggedIn h4  {
+        font-size: 2rem;
     }
 }

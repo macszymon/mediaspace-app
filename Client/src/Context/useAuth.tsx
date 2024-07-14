@@ -1,9 +1,8 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import React from "react";
 import { UserProfile } from "../types";
 
-const api = "http://localhost:5186/api";
+export const api = "http://localhost:5186/api";
 
 type UserContextType = {
   user: UserProfile | null;
@@ -15,7 +14,7 @@ type UserContextType = {
   errorMessage: string;
 };
 
-type Props = { children: React.ReactNode };
+type Props = { children: ReactNode };
 
 const UserContext = createContext<UserContextType>({} as UserContextType);
 
@@ -84,8 +83,10 @@ export const UserProvider = ({ children }: Props) => {
         localStorage.setItem("token", data.token);
         setToken(data.token);
         setUser(data);
+        setErrorMessage("")
         navigate("/");
       } catch (error: any) {
+        setErrorMessage("Invalid user name and/or password")
         console.log(error.message);
       }
   };
@@ -105,4 +106,4 @@ export const UserProvider = ({ children }: Props) => {
   return <UserContext.Provider value={{ loginUser, user, token, logout, isLoggedIn, registerUser, errorMessage }}>{isReady ? children : null}</UserContext.Provider>;
 };
 
-export const useAuth = () => React.useContext(UserContext);
+export const useAuth = () => useContext(UserContext);

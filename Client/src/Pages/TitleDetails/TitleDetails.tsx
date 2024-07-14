@@ -4,16 +4,17 @@ import Reviews from "../../Components/Reviews/Reviews";
 
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { api } from "../../api";
 import Spinner from "../../Components/Spinner/Spinner";
-import { Title } from "../../types";
+import { ReviewType, Title } from "../../types";
+import { api, useAuth } from "../../Context/useAuth";
 
 function TitleDetails() {
-  const [score, setScore] = useState(7);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState<Title | null>(null);
+  const [userReview, setUserReview] = useState<ReviewType | null>(null);
   const { id } = useParams();
+  const { user } = useAuth();
 
   async function fetchTitle() {
     try {
@@ -23,7 +24,96 @@ function TitleDetails() {
       }
       const data = await response.json();
       setTitle(data);
-      setLoading(false);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
+
+  async function fetchUserReview() {
+    try {
+      const response = await fetch(api + "/review/" + id, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Getting review failed");
+      }
+      const data = await response.json();
+      setUserReview(data);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
+
+  function setScoreButtonClass(score: number) {
+    return `${userReview && userReview?.score >= score && (userReview?.score >= 7 ? styles.actionsBtnGood : userReview?.score >= 4 ? styles.actionsBtnMedium : userReview?.score >= 1 ? styles.actionsBtnBad : "")} ${styles.actionsBtn}`;
+  }
+
+  async function handleScore(score: number) {
+    userReview ? ScoreChange(score) : ScoreAdd(score);
+  }
+
+  async function ScoreChange(score: number) {
+    try {
+      const response = await fetch(api + "/Review/" + id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({
+          score: score,
+          content: userReview ? userReview.content : "",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Changing score failed");
+      }
+      const data = await response.json();
+      setUserReview(data);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
+
+  async function ScoreAdd(score: number) {
+    try {
+      const response = await fetch(api + "/review/" + id, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({
+          score: score,
+          content: "",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Changing score failed");
+      }
+      const data = await response.json();
+      setUserReview(data);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
+
+  async function handleScoreRemove() {
+    try {
+      const response = await fetch(api + "/review/" + userReview?.id, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Changing score failed");
+      }
+      setUserReview(null);
     } catch (error: any) {
       console.log(error.message);
     }
@@ -31,7 +121,14 @@ function TitleDetails() {
 
   useEffect(() => {
     fetchTitle();
+    fetchUserReview();
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    fetchTitle();
+    setLoading(false);
+  }, [userReview]);
 
   return loading ? (
     <Spinner />
@@ -65,23 +162,23 @@ function TitleDetails() {
           <div className={styles.acionsRate}>
             <div className={styles.userScore}>
               <span>Your score:</span>
-              <span className={`${!score ? "score--none" : score >= 7 ? "score--good" : score >= 4 ? "score--medium" : "score--bad"} score`}>{!score ? "-" : score}</span>
+              <span className={`${!userReview?.score ? "score--none" : userReview?.score >= 7 ? "score--good" : userReview?.score >= 4 ? "score--medium" : "score--bad"} score`}>{userReview?.score ? userReview?.score : "-"}</span>
             </div>
             <div className={styles.actionsBtns}>
-              <button onClick={() => setScore(1)} className={`${score >= 1 && (score >= 7 ? styles.actionsBtnGood : score >= 4 ? styles.actionsBtnMedium : score >= 1 ? styles.actionsBtnBad : "")} ${styles.actionsBtn}`}></button>
-              <button onClick={() => setScore(2)} className={`${score >= 2 && (score >= 7 ? styles.actionsBtnGood : score >= 4 ? styles.actionsBtnMedium : score >= 1 ? styles.actionsBtnBad : "")} ${styles.actionsBtn}`}></button>
-              <button onClick={() => setScore(3)} className={`${score >= 3 && (score >= 7 ? styles.actionsBtnGood : score >= 4 ? styles.actionsBtnMedium : score >= 1 ? styles.actionsBtnBad : "")} ${styles.actionsBtn}`}></button>
-              <button onClick={() => setScore(4)} className={`${score >= 4 && (score >= 7 ? styles.actionsBtnGood : score >= 4 ? styles.actionsBtnMedium : score >= 1 ? styles.actionsBtnBad : "")} ${styles.actionsBtn}`}></button>
-              <button onClick={() => setScore(5)} className={`${score >= 5 && (score >= 7 ? styles.actionsBtnGood : score >= 4 ? styles.actionsBtnMedium : score >= 1 ? styles.actionsBtnBad : "")} ${styles.actionsBtn}`}></button>
-              <button onClick={() => setScore(6)} className={`${score >= 6 && (score >= 7 ? styles.actionsBtnGood : score >= 4 ? styles.actionsBtnMedium : score >= 1 ? styles.actionsBtnBad : "")} ${styles.actionsBtn}`}></button>
-              <button onClick={() => setScore(7)} className={`${score >= 7 && (score >= 7 ? styles.actionsBtnGood : score >= 4 ? styles.actionsBtnMedium : score >= 1 ? styles.actionsBtnBad : "")} ${styles.actionsBtn}`}></button>
-              <button onClick={() => setScore(8)} className={`${score >= 8 && (score >= 7 ? styles.actionsBtnGood : score >= 4 ? styles.actionsBtnMedium : score >= 1 ? styles.actionsBtnBad : "")} ${styles.actionsBtn}`}></button>
-              <button onClick={() => setScore(9)} className={`${score >= 9 && (score >= 7 ? styles.actionsBtnGood : score >= 4 ? styles.actionsBtnMedium : score >= 1 ? styles.actionsBtnBad : "")} ${styles.actionsBtn}`}></button>
-              <button onClick={() => setScore(10)} className={`${score === 10 && (score >= 7 ? styles.actionsBtnGood : score >= 4 ? styles.actionsBtnMedium : score >= 1 ? styles.actionsBtnBad : "")} ${styles.actionsBtn}`}></button>
+              <button onClick={() => handleScore(1)} className={setScoreButtonClass(1)}></button>
+              <button onClick={() => handleScore(2)} className={setScoreButtonClass(2)}></button>
+              <button onClick={() => handleScore(3)} className={setScoreButtonClass(3)}></button>
+              <button onClick={() => handleScore(4)} className={setScoreButtonClass(4)}></button>
+              <button onClick={() => handleScore(5)} className={setScoreButtonClass(5)}></button>
+              <button onClick={() => handleScore(6)} className={setScoreButtonClass(6)}></button>
+              <button onClick={() => handleScore(7)} className={setScoreButtonClass(7)}></button>
+              <button onClick={() => handleScore(8)} className={setScoreButtonClass(8)}></button>
+              <button onClick={() => handleScore(9)} className={setScoreButtonClass(9)}></button>
+              <button onClick={() => handleScore(10)} className={setScoreButtonClass(10)}></button>
             </div>
           </div>
-          {score > 0 && (
-            <button onClick={() => setScore(0)} className="btn btn--tertiary">
+          {userReview?.score && (
+            <button onClick={() => handleScoreRemove()} className="btn btn--tertiary">
               Remove score
             </button>
           )}
@@ -154,8 +251,11 @@ function TitleDetails() {
               </li>
             )}
             {title?.categories && (
-              <li className={styles.item}>
-                Genres: <span> {title?.categories.map((category) => category.name).join(", ")}</span>
+              <li className={styles.categories}>
+                Genres:
+                {title?.categories.map((category) => {
+                  return <span key={category.id} className={styles.category}>{category.name}</span>;
+                })}
               </li>
             )}
             {title?.platforms && (
@@ -170,7 +270,7 @@ function TitleDetails() {
             )}
           </ul>
         </div>
-        <Reviews score={score} reviews={title?.reviews} />
+        <Reviews reviews={title?.reviews} userReview={userReview} setUserReview={setUserReview} />
       </section>
     </div>
   );

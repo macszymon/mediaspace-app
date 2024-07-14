@@ -48,19 +48,19 @@ function Footer() {
         </ul>
         <ul className={styles.aataList}>
           <li className={styles.dataItem}>
-            <span>Books images provided by </span>
+            <span>Books images and descriptions provided by </span>
             <a target="_blank" className="link" href="https://openlibrary.org/developers/api">
               Open Library
             </a>
           </li>
           <li className={styles.dataItem}>
-            <span>Games images provided by </span>
+            <span>Games images and descriptions provided by </span>
             <a target="_blank" className="link" href="https://www.giantbomb.com/api/">
               GiantBomb
             </a>
           </li>
           <li className={styles.dataItem}>
-            <span>Movies & TV Shows images provided by </span>
+            <span>Movies & TV Shows images and descriptions provided by </span>
             <a target="_blank" className="link" href="https://www.omdbapi.com/">
               The Open Movie Database
             </a>

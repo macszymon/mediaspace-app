@@ -3,6 +3,7 @@ import CardsSlider from "../../Components/CardsSlider/CardsSlider";
 import ProgressSection from "../../Components/ProgressSection/ProgressSection";
 
 function Home() {
+  
   return (
     <>
       <ProgressSection />

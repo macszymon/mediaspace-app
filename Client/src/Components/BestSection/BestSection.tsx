@@ -3,8 +3,8 @@ import styles from "./BestSection.module.css";
 import Card from "../Card/Card";
 import { useEffect, useState } from "react";
 import { Title } from "../../types";
-import { api } from "../../api";
 import Spinner from "../Spinner/Spinner";
+import { api } from "../../Context/useAuth";
 
 function BestSection() {
   const [loading, setLoading] = useState(true);
