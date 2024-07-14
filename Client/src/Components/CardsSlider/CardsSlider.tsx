@@ -47,7 +47,7 @@ function CardsSlider({ header, sort }: Props) {
       </div>
       <div className={styles.cards}>
         {titles?.map((title) => {
-          return <Card id={title.id} image={title.image} title={title.name} score={title.avgScore} creator={title.type === "Book" ? title.author : title.type === "Game" ? title.developer : title.productionCompany} />;
+          return <Card key={title.id} id={title.id} image={title.image} title={title.name} score={title.avgScore} creator={title.type === "Book" ? title.author : title.type === "Game" ? title.developer : title.productionCompany} />;
         })}
       </div>
     </section>

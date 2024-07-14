@@ -43,3 +43,12 @@
   font-size: 0.9rem;
   font-weight: 400;
 }
+
+.dataItem {
+  font-size: .9rem;
+  font-weight: 400;
+}
+
+.dataItem span {
+  color: var(--color-neutral-500);
+}
