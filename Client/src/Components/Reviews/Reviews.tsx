@@ -1,13 +1,12 @@
-import styles from "./Reviews.module.css";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { TiArrowSortedDown } from "react-icons/ti";
 
+import { api, useAuth } from "../../Context/useAuth";
+import { ReviewType } from "../../types";
 import Review from "./Review";
 
-import { useEffect, useState } from "react";
-import { TiArrowSortedDown } from "react-icons/ti";
-import { ReviewType } from "../../types";
-import { api, useAuth } from "../../Context/useAuth";
-import { Link } from "react-router-dom";
-import Spinner from "../Spinner/Spinner";
+import styles from "./Reviews.module.css";
 
 interface Props {
   userReview: ReviewType | null;
@@ -18,7 +17,6 @@ interface Props {
 function Reviews({ userReview, reviews, setUserReview }: Props) {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [reviewsNumber, setReviewsNumber] = useState(0);
   const [reviewContent, setReviewContent] = useState(userReview?.content);
   const { user } = useAuth();
 
@@ -106,7 +104,7 @@ function Reviews({ userReview, reviews, setUserReview }: Props) {
           </Link>
         </div>
       )}
-      {reviews ? (
+      {reviews?.length ? (
         <>
           <div className={styles.info}>
             <h3 className={styles.subtitle}>{reviews.filter(review => review.content.length > 0).length} User Reviews</h3>
@@ -150,7 +148,7 @@ function Reviews({ userReview, reviews, setUserReview }: Props) {
             </div>
           </div>
           {reviews?.map((review) => {
-            return review.content ? <Review user={review.createdBy} date={review.createdOn} score={review.score} description={review.content} /> : null;
+            return review.content ? <Review key={review.id} user={review.createdBy} date={review.createdOn} score={review.score} description={review.content} /> : null;
           })}
         </>
       ) : (

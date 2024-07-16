@@ -9,5 +9,6 @@ namespace Server.Models
     public class AppUser: IdentityUser
     {
         public List<Review> Reviews { get; set; }
+        public ICollection<TitleStatus> TitleStatuses { get; set; } = new List<TitleStatus>();
     }
 }

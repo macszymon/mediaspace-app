@@ -32,5 +32,15 @@ namespace Server.Mappers
                 StartDate = titleStatusDto.StartDate,
             };
         }
+
+        public static TitleStatus toUpdateTitleStatusDto(this UpdateTitleStatusDto titleStatusDto)
+        {
+            return new TitleStatus
+            {
+                StatusId = titleStatusDto.StatusId,
+                EndDate = titleStatusDto.EndDate,
+                StartDate = titleStatusDto.StartDate,
+            };
+        }
     }
 }

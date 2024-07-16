@@ -1,0 +1,27 @@
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.results {
+  color: var(--color-neutral-400);
+  font-size: 1.15rem;
+  font-weight: 400;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+  margin-block: 2rem 3rem;
+}
+
+.notFound {
+  align-items: center;
+  display: flex;
+  font-size: 2rem;
+  justify-content: center;
+  min-height: 30vh;
+  text-align: center;
+}

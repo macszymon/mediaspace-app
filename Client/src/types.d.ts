@@ -32,6 +32,20 @@ export type Category = {
   name: string;
 }
 
+export type Status = {
+  id: number;
+  name: string;
+}
+
+export type UserTitleStatus = {
+  titleId: number 
+  title: Title 
+  statusId: number 
+  statusName: string 
+  startDate: string 
+  endDate: string     
+}
+
 export type ReviewType = {
   id: number;
   score: number;

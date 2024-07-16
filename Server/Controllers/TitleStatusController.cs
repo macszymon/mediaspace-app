@@ -66,6 +66,28 @@ namespace YourNamespace.Controllers
             return Ok(titleStatus.toTitleStatusDto());
         }
 
+        [HttpPut("{titleId:int}")]
+        [Authorize]
+        public async Task<IActionResult> Update(int titleId, UpdateTitleStatusDto titleStatusDto)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userName = User.GetUsername();
+            var AppUser = await _userManager.FindByNameAsync(userName);
+
+            var titleStatus = titleStatusDto.toUpdateTitleStatusDto();
+            titleStatus.TitleId = titleId;
+            titleStatus = await _titleStatusRepository.UpdateAsync(titleStatus, AppUser.Id);
+
+            if (titleStatus == null) 
+            {
+                return BadRequest("Title Status not found.");
+            }
+
+            return Ok(titleStatus.toTitleStatusDto());
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<ActionResult> Create(CreateTitleStatusDto titleStatusDto)
@@ -77,7 +99,7 @@ namespace YourNamespace.Controllers
                 return BadRequest(ModelState);
 
             var titleStatus = titleStatusDto.toCreateTitleStatusDto();
-
+            
             titleStatus = await _titleStatusRepository.CreateAsync(AppUser.Id, titleStatus);
 
             if (titleStatus == null)
@@ -85,7 +107,7 @@ namespace YourNamespace.Controllers
                 return BadRequest("User already has a status for this title!");
             }
 
-            return Ok(titleStatus);
+            return Ok(titleStatus.toTitleStatusDto());
         }
 
         [HttpDelete("{titleId}")]

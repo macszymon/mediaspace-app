@@ -2,12 +2,14 @@ import styles from "./Navbar.module.css";
 
 import { useState } from "react";
 import { IoIosSearch } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/useAuth";
 
 function Navbar() {
   const [isActive, setIsActive] = useState(false);
   const { user, logout } = useAuth();
+  const [searchInput, setSearchInput] = useState("");
+  const navigate  = useNavigate()
 
   const handleHamburgerClick = () => {
     setIsActive(!isActive);
@@ -16,6 +18,11 @@ function Navbar() {
   const closeNavMenu = () => {
     setIsActive(false);
   };
+
+  async function handleSearch(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault;
+    navigate("/Search/" + searchInput)
+  }
 
   return (
     <header className={`${styles.header} container`}>
@@ -56,7 +63,9 @@ function Navbar() {
           </li>
           <li className={styles.navInput}>
             <IoIosSearch />
-            <input type="text" />
+            <form onSubmit={e => handleSearch(e)}>
+              <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
+            </form>
           </li>
           <li>
             {user ? (
