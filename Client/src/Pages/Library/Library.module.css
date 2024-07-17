@@ -14,6 +14,10 @@
 }
 
 .link {
+  background-color: transparent;
+  border: none;
+  color: var(--color-neutral-200);
+  font-size: 1rem;
   position: relative;
 }
 
@@ -30,7 +34,8 @@
   width: 100%;
 }
 
-.linkActive:after, .link:hover::after {
+.linkActive:after,
+.link:hover::after {
   transform: scale(1, 1);
 }
 
@@ -48,24 +53,24 @@
 }
 
 .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 2rem;
-    justify-items: center;
-    margin-block: 2rem 3rem;
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+  margin-block: 2rem 3rem;
+}
 
 .notFound {
-  align-items: center;
-  display: flex;
-  font-size: 2rem;
-  justify-content: center;
-  min-height: 30vh;
-  text-align: center;
-}
- 
-  @media (min-width: 400px) {
-    .list {
-        gap: 2rem;
-    }
+    align-items: center;
+    display: flex;
+    font-size: 2rem;
+    justify-content: center;
+    min-height: 30vh;
+    text-align: center;
   }
+
+@media (min-width: 400px) {
+  .list {
+    gap: 2rem;
+  }
+}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Server.Dtos.Category;
 using Server.Models;
 
 namespace Server.Dtos
@@ -11,11 +12,8 @@ namespace Server.Dtos
     {
         [Required]
         [MinLength(2, ErrorMessage = "Name must be 2 charcters")]
-        [MaxLength(100, ErrorMessage = "Name cannot be over 280 charcters")]
         public string Name { get; set; } = String.Empty;
         [Required]
-        [MinLength(2, ErrorMessage = "Summary must be 2 charcters")]
-        [MaxLength(280, ErrorMessage = "Summary cannot be over 280 charcters")]
         public string Summary { get; set; } = String.Empty;
         [Required]
         public string Image { get; set; } = String.Empty;
@@ -33,5 +31,6 @@ namespace Server.Dtos
         public string? Director { get; set; }
         public string? Writer { get; set; }
         public string? Platforms { get; set; }
+        public int[]? CategoriesIds { get; set; }
     }
 }

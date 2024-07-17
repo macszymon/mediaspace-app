@@ -10,6 +10,7 @@ using Server.Dtos;
 using Server.Helpers;
 using Server.Interfaces;
 using Server.Mappers;
+using Server.Models;
 
 namespace Server.Controllers
 {
@@ -18,10 +19,12 @@ namespace Server.Controllers
     public class TitleController : ControllerBase
     {
         private readonly ITitleRepository _titleRepository;
+        private readonly ITitleCategoriesRepository _titleCategoriesRepository;
 
-        public TitleController(ITitleRepository titleRepository)
+        public TitleController(ITitleRepository titleRepository, ITitleCategoriesRepository titleCategoriesRepository)
         {
             _titleRepository = titleRepository;
+            _titleCategoriesRepository = titleCategoriesRepository;
         }
 
         [HttpGet]
@@ -58,8 +61,20 @@ namespace Server.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+
             var title = titleDto.toTitleFromCreateDto();
-            await _titleRepository.CreateAsync(title);
+
+            title = await _titleRepository.CreateAsync(title);
+
+            foreach(int id in titleDto.CategoriesIds) {
+                var titleCategory = new TitleCategory
+                {
+                    TitleId = title.Id,
+                    CategoryId = id
+                };
+                await _titleCategoriesRepository.CreateAsync(titleCategory);
+            };
+            
             return Ok(title);
         }
 

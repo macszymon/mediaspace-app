@@ -69,7 +69,7 @@ namespace Server.Controllers
                 return StatusCode(500, "Could not create");
             }
 
-            return Created();
+            return Ok(titleCategory);
         }
 
         [HttpDelete("{titleId}&{categoryId}")]

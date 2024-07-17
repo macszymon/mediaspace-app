@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Spinner from "../../Components/Spinner/Spinner";
 import { ReviewType, Status, Title, UserTitleStatus } from "../../types";
 import { api, useAuth } from "../../Context/useAuth";
+import { TiArrowSortedDown } from "react-icons/ti";
 
 function TitleDetails() {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ function TitleDetails() {
       }
       const data = await response.json();
       setStatuses(data);
+      setLoading(false);
     } catch (error: any) {
       console.log(error.message);
     }
@@ -74,7 +76,6 @@ function TitleDetails() {
       }
       const data = await response.json();
       setTitle(data);
-      setLoading(false);
     } catch (error: any) {
       console.log(error.message);
     }
@@ -290,7 +291,8 @@ function TitleDetails() {
         <div className={styles.actions}>
           <div className="dropdown dropdownPrimary">
             <button onClick={handleAddClick} className="dropdownBtn">
-              {userStatus ? userStatus.statusName : "Add to library"}
+              <span>{userStatus ? userStatus.statusName : "Add to library"}</span>
+              <TiArrowSortedDown />
             </button>
             {isAddOpen && (
               <ul className="dropdownList">
@@ -311,32 +313,38 @@ function TitleDetails() {
               </ul>
             )}
           </div>
-          {userStatus?.statusName === "Finished" && (
+          {userStatus && (userStatus?.statusName != "Want to Start" && (
             <>
               <form className={styles.datesForm} onSubmit={(e) => handleChangeDates(e)}>
                 <label className={styles.label} htmlFor="startDate">
                   Date Started
                 </label>
                 <input className={styles.dateInput} disabled={!isDateFormOpen} required id="startDate" value={startDate} type="date" onChange={(e) => setStartDate(e.target.value)} />
-                <label className={styles.label} htmlFor="startDate">
-                  Date Finished
-                </label>
-                <input className={styles.dateInput} disabled={!isDateFormOpen} required id="finishDate" value={endDate} type="date" onChange={(e) => setEndDate(e.target.value)} />
+                {userStatus?.statusName === "Finished" && (
+                  <>
+                    <label className={styles.label} htmlFor="startDate">
+                      Date Finished
+                    </label>
+                    <input className={styles.dateInput} disabled={!isDateFormOpen} required id="finishDate" value={endDate} type="date" onChange={(e) => setEndDate(e.target.value)} />
+                  </>
+                )}
                 {isDateFormOpen && (
-                  <button type="submit"className="btn btn--primary">
+                  <button type="submit" className="btn btn--primary">
                     Save changes
                   </button>
                 )}
               </form>
-              <button className="btn btn--secondary" onClick={() => {
-                setIsDateFormOpen((prev) => !prev)
-                setStartDate(userStatus.startDate)
-                setEndDate(userStatus.endDate)
+              <button
+                className="btn btn--secondary"
+                onClick={() => {
+                  setIsDateFormOpen((prev) => !prev);
+                  setStartDate(userStatus.startDate);
+                  setEndDate(userStatus.endDate);
                 }}>
                 {isDateFormOpen ? "Cancel" : "Edit Dates"}
               </button>
             </>
-          )}
+          ))}
           <div className={styles.acionsRate}>
             <div className={styles.userScore}>
               <span>Your score:</span>

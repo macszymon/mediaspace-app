@@ -13,6 +13,7 @@ using Server.Dtos.TitleStatus;
 using Server.Extensions;
 using Server.Mappers;
 using Server.Interfaces;
+using Server.Helpers;
 
 namespace YourNamespace.Controllers
 {
@@ -31,7 +32,7 @@ namespace YourNamespace.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult> GetUserTitleStatuses()
+        public async Task<ActionResult> GetUserTitleStatuses([FromQuery] TitleStatusQueryObject query)
         {
             var userName = User.GetUsername();
             var AppUser = await _userManager.FindByNameAsync(userName);
@@ -39,7 +40,7 @@ namespace YourNamespace.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var results = await _titleStatusRepository.GetAllUserStatusesAsync(AppUser.Id);
+            var results = await _titleStatusRepository.GetAllUserStatusesAsync(query, AppUser.Id);
 
             var resultsDto = results.Select(t => t.toTitleStatusDto());
 
@@ -76,9 +77,7 @@ namespace YourNamespace.Controllers
             var userName = User.GetUsername();
             var AppUser = await _userManager.FindByNameAsync(userName);
 
-            var titleStatus = titleStatusDto.toUpdateTitleStatusDto();
-            titleStatus.TitleId = titleId;
-            titleStatus = await _titleStatusRepository.UpdateAsync(titleStatus, AppUser.Id);
+            var titleStatus = await _titleStatusRepository.UpdateAsync(titleId, titleStatusDto, AppUser.Id);
 
             if (titleStatus == null) 
             {

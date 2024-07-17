@@ -12,6 +12,7 @@ function BestSection() {
   const [bestGame, setBestGame] = useState<Title | null>(null);
   const [bestMovie, setBestMovie] = useState<Title | null>(null);
   const [bestTvShow, setBestTvShow] = useState<Title | null>(null);
+  const date = new Date();
 
   async function fetchBest() {
     try {
@@ -60,7 +61,7 @@ function BestSection() {
         <span className={styles.bestText}>Best</span>
         <br />
         Entertainment
-        <br /> of <span className={styles.yearText}>2023</span>
+        <br /> of <span className={styles.yearText}>{date.getFullYear() - 1}</span>
       </h3>
       {loading ? (
         <Spinner />

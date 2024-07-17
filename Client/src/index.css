@@ -118,6 +118,8 @@ button {
 /* LINKS */
 
 .link {
+  background-color: transparent;
+  border: none;
   color: var(--color-neutral-200);
   font-size: 1rem;
   position: relative;
@@ -248,7 +250,6 @@ button {
 
 .dropdownPrimary .dropdownBtn {
   background-color: var(--color-primary);
-  justify-content: center;
 }
 
 .dropdownSecondary .dropdownBtn {

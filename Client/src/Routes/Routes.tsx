@@ -9,6 +9,8 @@ import Footer from "../Components/Footer/Footer";
 import Navbar from "../Components/Narbar/Navbar";
 import { UserProvider } from "../Context/useAuth";
 import Search from "../Pages/Search/Search";
+import Admin from "../Pages/Admin/Admin";
+import Library from "../Pages/Library/Library";
 
 const Layout = () => {
   return (
@@ -54,7 +56,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/library",
-        element: <Home />,
+        element: <Library />,
       },
       {
         path: "/profile",
@@ -62,8 +64,12 @@ export const router = createBrowserRouter([
       },
       {
         path: "/search/:searchQuery",
-        element: <Search/>
-      }
+        element: <Search />,
+      },
+      {
+        path: "/admin",
+        element: <Admin />,
+      },
     ],
   },
   {

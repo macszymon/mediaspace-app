@@ -37,10 +37,10 @@ namespace Server.Data
             builder.Entity<TitleStatus>().HasKey(u => new 
             {
                 u.TitleId,
-                u.StatusId
+                u.AppUserId
             });
             builder.Entity<TitleStatus>().HasOne(u => u.Title).WithMany(u => u.TitleStatuses).HasForeignKey(u => u.TitleId);
-            builder.Entity<TitleStatus>().HasOne(u => u.Status).WithMany(u => u.TitleStatuses).HasForeignKey(u => u.StatusId);
+            builder.Entity<TitleStatus>().HasOne(u => u.AppUser).WithMany(u => u.TitleStatuses).HasForeignKey(u => u.AppUserId);
 
             base.OnModelCreating(builder);
 

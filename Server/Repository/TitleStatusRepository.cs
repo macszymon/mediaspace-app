@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Dtos.TitleStatus;
+using Server.Helpers;
 using Server.Interfaces;
 using Server.Models;
 
@@ -64,9 +65,9 @@ namespace Server.Repository
             return titleStatus;
         }
 
-        public async Task<List<TitleStatus>> GetAllUserStatusesAsync(string AppUserId)
+        public async Task<List<TitleStatus>> GetAllUserStatusesAsync(TitleStatusQueryObject query, string AppUserId)
         {
-            var titleStatuses = await _context.TitleStatuses
+            var titleStatuses = _context.TitleStatuses
                 .Include(s => s.Title)
                 .ThenInclude(t => t.Reviews)
                 .ThenInclude(r => r.AppUser)
@@ -75,10 +76,26 @@ namespace Server.Repository
                 .ThenInclude(t => t.Category)
                 .Include(s => s.Status)
                 .Include(t => t.Title)
-                .ThenInclude(t => t.Type)
-                .Where(uts => uts.AppUserId == AppUserId).ToListAsync();
+                .ThenInclude(t => t.Type).AsQueryable().Where(uts => uts.AppUserId == AppUserId);
 
-            return titleStatuses;
+            if(!string.IsNullOrWhiteSpace(query.type)) 
+            {
+                titleStatuses = titleStatuses.Where(t => t.Title.Type.Name.Contains(query.type));
+            }
+
+            if(!string.IsNullOrWhiteSpace(query.status)) 
+            {
+                titleStatuses = titleStatuses.Where(t => t.Status.Name.Contains(query.status));
+            }
+
+            if(query.finishYear.HasValue)
+            {
+                titleStatuses = titleStatuses.Where(t => t.EndDate.Value.Year == query.finishYear);
+            }
+
+            var titleStatusesList = await titleStatuses.ToListAsync();
+
+            return titleStatusesList;
         }
 
         public async Task<TitleStatus> GetByIdAsync(string AppUserId, int titleId)
@@ -103,21 +120,20 @@ namespace Server.Repository
             return titleStatus;
         }
 
-        public async Task<TitleStatus?> UpdateAsync(TitleStatus titleStatus, string AppUserId)
+        public async Task<TitleStatus?> UpdateAsync(int titleId, UpdateTitleStatusDto titleStatusDto, string AppUserId)
         {
-            var userTitleStatus = await _context.TitleStatuses.FirstOrDefaultAsync(uts => uts.TitleId == titleStatus.TitleId && uts.AppUserId == AppUserId);
+            var titleStatus = await _context.TitleStatuses.FirstOrDefaultAsync(uts => uts.TitleId == titleId && uts.AppUserId == AppUserId);
 
-            if (userTitleStatus == null)
+            if (titleStatus == null) 
             {
                 return null;
             }
 
-            _context.TitleStatuses.Remove(userTitleStatus);
-
-            await _context.SaveChangesAsync();
-
+            titleStatus.TitleId = titleId;
             titleStatus.AppUserId = AppUserId;
-            _context.TitleStatuses.Add(titleStatus);
+            titleStatus.StatusId = titleStatusDto.StatusId;
+            titleStatus.EndDate = titleStatusDto.EndDate;
+            titleStatus.StartDate =titleStatusDto.StartDate;
 
             await _context.SaveChangesAsync();
 

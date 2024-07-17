@@ -104,7 +104,7 @@ function Reviews({ userReview, reviews, setUserReview }: Props) {
           </Link>
         </div>
       )}
-      {reviews?.length ? (
+      {reviews && reviews.filter(review => review.content.length > 0).length ? (
         <>
           <div className={styles.info}>
             <h3 className={styles.subtitle}>{reviews.filter(review => review.content.length > 0).length} User Reviews</h3>

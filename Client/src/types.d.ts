@@ -2,6 +2,7 @@ export type UserProfile = {
   userName: string;
   email: string;
   token: string;
+  roles: string[];
 };
 
 export type Title = {
@@ -26,6 +27,30 @@ export type Title = {
   categories: Category[];
   reviews: ReviewType[];
 };
+
+export type AddTitleType = {
+  name: string;
+  summary: string;
+  image: string;
+  releaseDate: string;
+  isbn: string;
+  numberOfSeasons: number;
+  movieLength: number;
+  typeId: number;
+  author: string;
+  developer: string;
+  publisher: string;
+  creator: string;
+  productionCompany: string;
+  director: string;
+  writer: string;
+  platforms: string;
+};
+
+export type Type = {
+  id: number;
+  name: string;
+}
 
 export type Category = {
   id: number;

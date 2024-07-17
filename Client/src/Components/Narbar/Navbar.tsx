@@ -38,29 +38,19 @@ function Navbar() {
         <ul className={`${styles.navMenu} ${isActive ? styles.active : ""}`}>
           <li onClick={closeNavMenu}>
             <Link to="/books/score" className="link">
-              Books
+              Browse
             </Link>
           </li>
-          <li onClick={closeNavMenu}>
-            <Link to="/Games/score" className="link">
-              Games
-            </Link>
-          </li>
-          <li onClick={closeNavMenu}>
-            <Link to="/Movies/score" className="link">
-              Movies
-            </Link>
-          </li>
-          <li onClick={closeNavMenu}>
-            <Link to="/Shows/score" className="link">
-              TV Shows
-            </Link>
-          </li>
-          <li onClick={closeNavMenu}>
+          {user && <li onClick={closeNavMenu}>
             <Link to="/Library" className="link">
               Library
             </Link>
-          </li>
+          </li>}
+          {user?.roles && (user.roles.includes("Admin") && <li onClick={closeNavMenu}>
+            <Link to="/Admin" className="link">
+              Admin
+            </Link>
+          </li>)}
           <li className={styles.navInput}>
             <IoIosSearch />
             <form onSubmit={e => handleSearch(e)}>

@@ -173,6 +173,10 @@
     grid-template-columns: auto 1fr;
   }
 
+  .img {
+    width: 17rem;
+  }
+
   .sidebar {
     position: sticky;
     top: 5rem;

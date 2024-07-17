@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server.Data;
 
@@ -11,9 +12,11 @@ using Server.Data;
 namespace Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240716100153_userKeyInStatuses")]
+    partial class userKeyInStatuses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8d9eab93-51e2-400e-8caf-ab5eaa10837e",
+                            Id = "d4a6f232-a6af-4ed5-ab7c-246d3c4f8ce7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "0c7dd49b-ac20-493b-97b1-7354a87d1194",
+                            Id = "0865b105-e29b-43f7-a1eb-93064e98d07a",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -387,6 +390,9 @@ namespace Server.Migrations
                     b.Property<int>("TitleId")
                         .HasColumnType("int");
 
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
                     b.Property<string>("AppUserId")
                         .HasColumnType("nvarchar(450)");
 
@@ -396,10 +402,7 @@ namespace Server.Migrations
                     b.Property<DateOnly?>("StartDate")
                         .HasColumnType("date");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TitleId", "AppUserId");
+                    b.HasKey("TitleId", "StatusId", "AppUserId");
 
                     b.HasIndex("AppUserId");
 

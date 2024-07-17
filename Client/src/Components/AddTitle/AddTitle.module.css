@@ -1,0 +1,48 @@
+.form {
+    margin-bottom: 2rem;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    display: block;
+    font-size: 1.25rem;
+}
+
+.input {
+    background-color: var(--color-neutral-600);
+    border: none;
+    border-radius: .25rem;
+    color: var(--color-neutral-500);
+    padding: .35rem .5rem;
+    transition: .3s ease-in-out;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.input:hover {
+  background-color: var(--color-neutral-200);
+  color: var(--color-neutral-800);
+}
+
+.input:focus {
+  background-color: var(--color-neutral-200);
+  color: var(--color-neutral-800);
+  outline: 2px solid var(--color-primary);
+}
+
+.categories {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit,10rem);
+    margin-block: .5rem 1rem;
+}
+
+.category {
+    align-items: center;
+    display: flex;
+    gap: .25rem;
+}

@@ -44,6 +44,7 @@ namespace Server.Controllers
                 };
 
                 var createdUser = await _userManager.CreateAsync(appUser, registerDto.Password);
+                var userRole = await _userManager.GetRolesAsync(appUser);
 
                 if(createdUser.Succeeded)
                 {
@@ -56,6 +57,7 @@ namespace Server.Controllers
                                 UserName = appUser.UserName,
                                 Email = appUser.Email,
                                 Token = _tokenService.CreateToken(appUser).Result,
+                                Roles = userRole.ToArray()
                             }
                         );
                     }
@@ -82,6 +84,7 @@ namespace Server.Controllers
                 return BadRequest(ModelState);
 
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
+            var userRole = await _userManager.GetRolesAsync(user);
 
             if(user == null)
             {
@@ -101,6 +104,7 @@ namespace Server.Controllers
                     UserName = user.UserName,
                     Email = user.Email,
                     Token = _tokenService.CreateToken(user).Result,
+                    Roles = userRole.ToArray(),
                 }  
             );
         }

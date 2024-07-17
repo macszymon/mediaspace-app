@@ -33,6 +33,7 @@ function Browse({ type }: Props) {
   const handleSortChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const button = e.target as HTMLButtonElement;
     setIsDropdownOpen(false);
+    setCurrentPage(1);
     navigate("/" + type + "s/" + button.value);
   };
 
