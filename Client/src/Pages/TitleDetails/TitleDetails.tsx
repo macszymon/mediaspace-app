@@ -6,13 +6,14 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Spinner from "../../Components/Spinner/Spinner";
 import { ReviewType, Status, Title, UserTitleStatus } from "../../types";
-import { api, useAuth } from "../../Context/useAuth";
+import { useAuth } from "../../Context/useAuth";
 import { TiArrowSortedDown } from "react-icons/ti";
+import { addScore, changeReview, changeUserStatus, createUserStatus, fetchStatuses, fetchTitle, fetchUserReview, fetchUserStatus, removeReview, removeUserStatus } from "../../api";
 
 function TitleDetails() {
   const navigate = useNavigate();
 
-  const { id } = useParams();
+  const { id = "1" } = useParams();
   const { user } = useAuth();
 
   const [loading, setLoading] = useState(true);
@@ -30,239 +31,36 @@ function TitleDetails() {
     return `${userReview && userReview?.score >= score && (userReview?.score >= 7 ? styles.actionsBtnGood : userReview?.score >= 4 ? styles.actionsBtnMedium : userReview?.score >= 1 ? styles.actionsBtnBad : "")} ${styles.actionsBtn}`;
   }
 
-  async function fetchStatuses() {
-    try {
-      const response = await fetch(api + "/Status/", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Getting statuses failed");
-      }
-      const data = await response.json();
-      setStatuses(data);
-      setLoading(false);
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  async function fetchUserStatus() {
-    try {
-      const response = await fetch(api + "/TitleStatus/" + id, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Getting userStatus failed");
-      }
-      const data = await response.json();
-      setUserStatus(data);
-      setStartDate(data.startDate);
-      setEndDate(data.endDate);
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  async function fetchTitle() {
-    try {
-      const response = await fetch(api + "/title/" + id);
-      if (!response.ok) {
-        throw new Error("getting title failed");
-      }
-      const data = await response.json();
-      setTitle(data);
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  async function fetchUserReview() {
-    try {
-      const response = await fetch(api + "/review/" + id, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Getting review failed");
-      }
-      const data = await response.json();
-      setUserReview(data);
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  async function putUserStatus(statusId: number) {
-    try {
-      const response = await fetch(api + "/TitleStatus/" + id, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({
-          statusId: statusId,
-          startDate: startDate,
-          endDate: endDate,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Changing status failed");
-      }
-      const data = await response.json();
-      setUserStatus(data);
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  async function createUserStatus(statusId: number) {
-    try {
-      const response = await fetch(api + "/TitleStatus/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({
-          titleId: id,
-          statusId: statusId,
-          startDate: startDate,
-          endDate: endDate,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Changing status failed");
-      }
-      const data = await response.json();
-      setUserStatus(data);
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  async function removeUserStatus() {
-    try {
-      const response = await fetch(api + "/TitleStatus/" + id, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Deleting status failed");
-      }
-      setUserStatus(null);
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  async function changeScore(score: number) {
-    try {
-      const response = await fetch(api + "/Review/" + id, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({
-          score: score,
-          content: userReview ? userReview.content : "",
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Changing score failed");
-      }
-      const data = await response.json();
-      setUserReview(data);
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  async function addScore(score: number) {
-    try {
-      const response = await fetch(api + "/review/" + id, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({
-          score: score,
-          content: "",
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Changing score failed");
-      }
-      const data = await response.json();
-      setUserReview(data);
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  async function removeScore() {
-    try {
-      const response = await fetch(api + "/review/" + userReview?.id, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Changing score failed");
-      }
-      setUserReview(null);
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
   async function handleAddScore(score: number) {
-    user ? (userReview ? changeScore(score) : addScore(score)) : navigate("/Login");
-    userStatus ? userStatus.statusId !== 3 && putUserStatus(3) : createUserStatus(3);
-  }
-
-  async function handleRemoveScore() {
-    removeScore();
+    if (user && userReview) {
+      setUserReview(await changeReview(id, score, userReview.content, user.token));
+    } else if (user && !userReview) {
+      setUserReview(await addScore(id, score, user.token));
+    } else {
+      navigate("/Login");
+    }
   }
 
   async function handleAddStatus(statusId: number) {
-    userStatus ? putUserStatus(statusId) : createUserStatus(statusId);
-    statusId !== 3 && userReview && handleRemoveScore();
+    if (user) {
+      if (userStatus) {
+        setUserStatus(await changeUserStatus(id, statusId, startDate, endDate, user.token));
+      } else {
+        setUserStatus(await createUserStatus(id, statusId, startDate, endDate, user.token));
+      }
+      setIsAddOpen(false);
+    }
   }
 
   async function handleRemoveStatus() {
-    removeUserStatus();
-    setStartDate(new Date().toJSON().slice(0, 10));
-    setEndDate(new Date().toJSON().slice(0, 10));
-    userReview && removeScore();
-  }
-
-  async function handleAddClick() {
-    user ? setIsAddOpen((prev) => !prev) : navigate("/Login");
-  }
-
-  useEffect(() => {
-    fetchTitle();
-    fetchStatuses();
     if (user) {
-      fetchUserReview();
-      fetchUserStatus();
+      removeUserStatus(id, user.token);
+      setUserStatus(null);
+      setStartDate(new Date().toJSON().slice(0, 10));
+      setEndDate(new Date().toJSON().slice(0, 10));
+      setIsAddOpen(false);
     }
-  }, []);
+  }
 
   async function handleChangeDates(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -270,12 +68,57 @@ function TitleDetails() {
     userStatus && handleAddStatus(userStatus.statusId);
   }
 
+  async function handleAddClick() {
+    user ? setIsAddOpen((prev) => !prev) : navigate("/Login");
+  }
+
+  async function handleScoreRemove() {
+    if (user && userReview) {
+      removeReview(userReview.id, user.token);
+    }
+  }
+
+  async function fetchData() {
+    setTitle(await fetchTitle(id));
+    setStatuses(await fetchStatuses());
+    if (user) {
+      setUserReview(await fetchUserReview(id, user.token));
+      const userStatus = await fetchUserStatus(id, user.token);
+      setUserStatus(userStatus);
+      setStartDate(userStatus.startDate);
+      setEndDate(userStatus.endDate);
+    }
+  }
+
   useEffect(() => {
-    fetchTitle();
+    fetchData();
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    async function fetch() {
+      setTitle(await fetchTitle(id));
+      if (user) {
+        const userStatus = await fetchUserStatus(id, user.token);
+        setUserStatus(userStatus);
+        setStartDate(userStatus.startDate);
+        setEndDate(userStatus.endDate);
+      }
+    }
+    fetch();
   }, [userReview]);
 
   useEffect(() => {
-    setIsAddOpen(false);
+    async function fetch() {
+      if (user) {
+        const userReview = await fetchUserReview(id, user.token);
+        setUserReview(userReview);
+        const userStatus = await fetchUserStatus(id, user.token);
+        setStartDate(userStatus.startDate);
+        setEndDate(userStatus.endDate);
+      }
+    }
+    fetch();
   }, [userStatus]);
 
   return loading ? (
@@ -313,7 +156,7 @@ function TitleDetails() {
               </ul>
             )}
           </div>
-          {userStatus && (userStatus?.statusName != "Want to Start" && (
+          {userStatus && userStatus?.statusName != "Want to Start" && (
             <>
               <form className={styles.datesForm} onSubmit={(e) => handleChangeDates(e)}>
                 <label className={styles.label} htmlFor="startDate">
@@ -344,7 +187,7 @@ function TitleDetails() {
                 {isDateFormOpen ? "Cancel" : "Edit Dates"}
               </button>
             </>
-          ))}
+          )}
           <div className={styles.acionsRate}>
             <div className={styles.userScore}>
               <span>Your score:</span>
@@ -364,7 +207,7 @@ function TitleDetails() {
             </div>
           </div>
           {userReview?.score && (
-            <button onClick={() => handleRemoveScore()} className="btn btn--tertiary">
+            <button onClick={() => handleScoreRemove()} className="btn btn--tertiary">
               Remove score
             </button>
           )}

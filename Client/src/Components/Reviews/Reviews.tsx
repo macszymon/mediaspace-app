@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { TiArrowSortedDown } from "react-icons/ti";
 
-import { api, useAuth } from "../../Context/useAuth";
 import { ReviewType } from "../../types";
 import Review from "./Review";
 
 import styles from "./Reviews.module.css";
+import { useAuth } from "../../Context/useAuth";
+import { changeReview } from "../../api";
 
 interface Props {
   userReview: ReviewType | null;
@@ -15,56 +15,22 @@ interface Props {
 }
 
 function Reviews({ userReview, reviews, setUserReview }: Props) {
-  const [isSortOpen, setIsSortOpen] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [reviewContent, setReviewContent] = useState(userReview?.content);
   const { user } = useAuth();
 
   async function handleReviewAdd(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    try {
-      const response = await fetch(api + "/review/" + userReview?.titleId, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({
-          score: userReview?.score,
-          content: reviewContent,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Changing score failed");
-      }
-      const data = await response.json();
+    if (userReview && user) {
+      const data = await changeReview(userReview.titleId, userReview.score, reviewContent, user?.token);
       setUserReview(data);
-    } catch (error: any) {
-      console.log(error.message);
     }
   }
 
   async function handleReviewDelete() {
-    try {
-      const response = await fetch(api + "/review/" + userReview?.titleId, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({
-          score: userReview?.score,
-          content: "",
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Changing score failed");
-      }
-      const data = await response.json();
+    if (userReview && user) {
+      const data = await changeReview(userReview.titleId, userReview.score, "", user?.token);
       setUserReview(data);
       setReviewContent("");
-    } catch (error: any) {
-      console.log(error.message);
     }
   }
 
@@ -104,48 +70,10 @@ function Reviews({ userReview, reviews, setUserReview }: Props) {
           </Link>
         </div>
       )}
-      {reviews && reviews.filter(review => review.content.length > 0).length ? (
+      {reviews && reviews.filter((review) => review.content.length > 0).length ? (
         <>
           <div className={styles.info}>
-            <h3 className={styles.subtitle}>{reviews.filter(review => review.content.length > 0).length} User Reviews</h3>
-            <div className={styles.filters}>
-              <div className={"dropdown dropdownSecondary"}>
-                <button onClick={() => setIsFilterOpen((prev) => !prev)} className={"dropdownBtn dropdownBtnSecondary"}>
-                  Filter: All <TiArrowSortedDown />
-                </button>
-                {isFilterOpen && (
-                  <ul className="dropdownList">
-                    <li className="dropdownItem">
-                      <button>All</button>
-                    </li>
-                    <li className="dropdownItem">
-                      <button>Positive</button>
-                    </li>
-                    <li className="dropdownItem">
-                      <button>Mixed</button>
-                    </li>
-                    <li className="dropdownItem">
-                      <button>Negative</button>
-                    </li>
-                  </ul>
-                )}
-              </div>
-              <div className={"dropdown dropdownSecondary"}>
-                <button onClick={() => setIsSortOpen((prev) => !prev)} className={"dropdownBtn dropdownBtnSecondary"}>
-                  Sort by: Score <TiArrowSortedDown />
-                </button>
-                {isSortOpen && (
-                  <ul className="dropdownList">
-                    <li className="dropdownItem">
-                      <button>Score</button>
-                    </li>
-                    <li className="dropdownItem">
-                      <button>Recent</button>
-                    </li>
-                  </ul>
-                )}
-              </div>
-            </div>
+            <h3 className={styles.subtitle}>{reviews.filter((review) => review.content.length > 0).length} User Reviews</h3>
           </div>
           {reviews?.map((review) => {
             return review.content ? <Review key={review.id} user={review.createdBy} date={review.createdOn} score={review.score} description={review.content} /> : null;

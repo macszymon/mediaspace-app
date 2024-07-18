@@ -1,8 +1,7 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserProfile } from "../types";
-
-export const api = "http://localhost:5186/api";
+import { api } from "../api";
 
 type UserContextType = {
   user: UserProfile | null;

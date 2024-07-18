@@ -9,7 +9,7 @@ function Navbar() {
   const [isActive, setIsActive] = useState(false);
   const { user, logout } = useAuth();
   const [searchInput, setSearchInput] = useState("");
-  const navigate  = useNavigate()
+  const navigate = useNavigate();
 
   const handleHamburgerClick = () => {
     setIsActive(!isActive);
@@ -21,7 +21,7 @@ function Navbar() {
 
   async function handleSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault;
-    navigate("/Search/" + searchInput)
+    navigate("/Search/" + searchInput);
   }
 
   return (
@@ -41,26 +41,30 @@ function Navbar() {
               Browse
             </Link>
           </li>
-          {user && <li onClick={closeNavMenu}>
-            <Link to="/Library" className="link">
-              Library
-            </Link>
-          </li>}
-          {user?.roles && (user.roles.includes("Admin") && <li onClick={closeNavMenu}>
-            <Link to="/Admin" className="link">
-              Admin
-            </Link>
-          </li>)}
-          <li className={styles.navInput}>
-            <IoIosSearch />
-            <form onSubmit={e => handleSearch(e)}>
+          {user && (
+            <li onClick={closeNavMenu}>
+              <Link to="/Library" className="link">
+                Library
+              </Link>
+            </li>
+          )}
+          {user?.roles && user.roles.includes("Admin") && (
+            <li onClick={closeNavMenu}>
+              <Link to="/Admin" className="link">
+                Admin
+              </Link>
+            </li>
+          )}
+          <li className={styles.navFormItem}>
+            <form className={styles.navForm}  onSubmit={(e) => handleSearch(e)}>
+              <IoIosSearch />
               <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
             </form>
           </li>
           <li>
             {user ? (
               <div className={styles.navBtns}>
-                <button className="btn btn--secondary">{user.userName}</button>
+                <span>{user.userName}</span>
                 <button className="btn btn--primary" onClick={logout}>
                   Logout
                 </button>

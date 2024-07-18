@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Title } from "../../types";
 import Spinner from "../Spinner/Spinner";
 import { Link } from "react-router-dom";
-import { api } from "../../Context/useAuth";
+import { fetchTitles } from "../../api";
 
 interface Props {
   header: string;
@@ -16,23 +16,14 @@ function CardsSlider({ header, sort }: Props) {
   const [loading, setLoading] = useState(true);
   const [titles, setTitles] = useState<Title[]>([]);
 
-  async function fetchTitle() {
-    try {
-      const response = await fetch(api + "/title/?type=" + "&sortBy=" + sort + "&isDescending=true" + "&pageSize=" + 12);
-      if (!response.ok) {
-        throw new Error("Getting titles failded");
-      }
-      const data = await response.json();
-      setTitles(data.items);
-      setLoading(false);
-    } catch (error: any) {
-      console.log(error.message);
-    }
+  async function handleData() {
+    const data = await fetchTitles("","", sort, "", 12);
+    setTitles(data.items)
   }
-
+  
   useEffect(() => {
-    setLoading(true);
-    fetchTitle();
+    handleData()
+    setLoading(false);
   }, []);
 
   return loading ? (

@@ -56,7 +56,14 @@ namespace Server.Repository
 
         public async Task<Review?> GetByIdAsync(int titleId, string AppUserId)
         {
-            return await _context.Reviews.Include(r => r.AppUser).FirstOrDefaultAsync(r => r.TitleId == titleId && r.AppUserId == AppUserId);
+            var review = await _context.Reviews.Include(r => r.AppUser).FirstOrDefaultAsync(r => r.TitleId == titleId && r.AppUserId == AppUserId);
+
+            if (review == null) 
+            {
+                return null;
+            }
+
+            return review;
         }
 
         public async Task<Review?> UpdateAsync(int titleId, UpdateReviewDto reviewDto, string AppUserId)

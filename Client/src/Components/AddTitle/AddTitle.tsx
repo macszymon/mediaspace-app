@@ -2,9 +2,10 @@ import styles from "./AddTitle.module.css";
 
 import { useEffect, useState } from "react";
 import { AddTitleType, Category, Type } from "../../types";
-import { api, useAuth } from "../../Context/useAuth";
+import { useAuth } from "../../Context/useAuth";
 import Spinner from "../Spinner/Spinner";
 import { useNavigate } from "react-router-dom";
+import { createTitle, fetchCatrgories, fetchTypes } from "../../api";
 
 function AddTitle() {
   const navigate = useNavigate();
@@ -32,70 +33,38 @@ function AddTitle() {
     platforms: "",
   });
 
-  async function fetchCatrgories() {
-    try {
-      const response = await fetch(api + "/Category");
-      if (!response.ok) {
-        throw new Error("Getting categories failed");
-      }
-      const data = await response.json();
-      setCategories(data);
-      setLoading(false);
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
-
-  async function fetchTypes() {
-    try {
-      const response = await fetch(api + "/type");
-      if (!response.ok) {
-        throw new Error("Getting types failed");
-      }
-      const data = await response.json();
-      setTypes(data);
-      setTitle({ ...title, typeId: data[0].id });
-    } catch (error: any) {
-      console.log(error.message);
-    }
+  async function handleData() {
+    setCategories(await fetchCatrgories());
+    const data = await fetchTypes();
+    setTypes(data);
+    setTitle({ ...title, typeId: data[0].id });
+    setLoading(false);
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    try {
-      const response = await fetch(api + "/title/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          name: title.name,
-          summary: title.summary,
-          image: title.image,
-          releaseDate: title.releaseDate,
-          isbn: title.isbn ? title.isbn : null,
-          numberOfSeasons: title.numberOfSeasons ? title.numberOfSeasons : null,
-          movieLength: title.movieLength ? title.movieLength : null,
-          typeId: title.typeId,
-          author: title.author ? title.author : null,
-          developer: title.developer ? title.developer : null,
-          publisher: title.publisher ? title.publisher : null,
-          creator: title.creator ? title.creator : null,
-          productionCompany: title.productionCompany ? title.productionCompany : null,
-          director: title.director ? title.director : null,
-          writer: title.writer ? title.writer : null,
-          platforms: title.platforms ? title.platforms : null,
-          categoriesIds: titleCategoriesIds,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Creating title failed");
-      }
-      const data = await response.json();
+    if (token) {
+      const addTitleObject = {
+        name: title.name,
+        summary: title.summary,
+        image: title.image,
+        releaseDate: title.releaseDate,
+        isbn: title.isbn ? title.isbn : null,
+        numberOfSeasons: title.numberOfSeasons ? title.numberOfSeasons : null,
+        movieLength: title.movieLength ? title.movieLength : null,
+        typeId: title.typeId,
+        author: title.author ? title.author : null,
+        developer: title.developer ? title.developer : null,
+        publisher: title.publisher ? title.publisher : null,
+        creator: title.creator ? title.creator : null,
+        productionCompany: title.productionCompany ? title.productionCompany : null,
+        director: title.director ? title.director : null,
+        writer: title.writer ? title.writer : null,
+        platforms: title.platforms ? title.platforms : null,
+        categoriesIds: titleCategoriesIds,
+      };
+      const data = await createTitle(addTitleObject, token);
       navigate("/title/" + data.id);
-    } catch (error: any) {
-      console.log(error.message);
     }
   }
 
@@ -110,12 +79,10 @@ function AddTitle() {
         return [...prev, category.id];
       }
     });
-    console.log(titleCategoriesIds);
   }
 
   useEffect(() => {
-    fetchTypes();
-    fetchCatrgories();
+    handleData();
   }, []);
 
   return loading ? (

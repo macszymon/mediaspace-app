@@ -1,10 +1,10 @@
 .header {
-    background-color: var(--color-neutral-800);
-    padding-block: 1rem;
-    position: sticky;
-    top: 0;
-    margin-bottom: 1rem;
-    z-index: 10;
+  background-color: var(--color-neutral-800);
+  padding-block: 1rem;
+  position: sticky;
+  top: 0;
+  margin-bottom: 1rem;
+  z-index: 10;
 }
 
 .nav {
@@ -41,43 +41,47 @@
   left: 0;
 }
 
-.navInput {
-  align-items: center;
+.navFormItem {
   align-self: stretch;
+  flex-grow: 100;
+}
+
+.navForm {
+  align-items: center;
   background-color: var(--color-neutral-600);
   border-radius: 2rem;
   color: var(--color-neutral-500);
   display: flex;
-  flex-grow: 100;
-  gap: .35rem;
-  padding: .35rem .5rem;
-  transition: .3s ease-in-out;
+  gap: 0.35rem;
+  padding: 0.35rem 0.5rem;
+  transition: 0.3s ease-in-out;
 }
 
-.navInput input {
+.navForm input {
   background-color: transparent;
   border: none;
   color: inherit;
   width: 100%;
 }
 
-.navInput svg {
+.navForm svg {
   color: inherit;
   font-size: 1.2rem;
 }
 
-.navInput:hover {
+.navForm:hover {
   background-color: var(--color-neutral-200);
   color: var(--color-neutral-800);
 }
 
-.navInput:focus-within{
+.navForm:focus-within {
   background-color: var(--color-neutral-200);
   color: var(--color-neutral-800);
   outline: 2px solid var(--color-primary);
 }
 
 .navBtns {
+  align-items: center;
   display: flex;
   flex-direction: column;
   gap: 1rem;

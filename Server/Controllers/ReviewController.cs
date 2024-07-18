@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Server.Dtos.Review;
+using Server.Dtos.TitleStatus;
 using Server.Extensions;
 using Server.Interfaces;
 using Server.Mappers;
@@ -19,12 +20,14 @@ namespace Server.Controllers
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly ITitleRepository _titleRepository;
+        private readonly ITitleStatusRepository _titleStatusRepository;
         private readonly UserManager<AppUser> _userManager;
 
-        public ReviewController(IReviewRepository reviewRepository, ITitleRepository titleRepository, UserManager<AppUser> userManager)
+        public ReviewController(IReviewRepository reviewRepository, ITitleRepository titleRepository,ITitleStatusRepository titleStatusRepository, UserManager<AppUser> userManager)
         {
             _userManager = userManager;
             _reviewRepository = reviewRepository;
+            _titleStatusRepository = titleStatusRepository;
             _titleRepository = titleRepository;
         }
 
@@ -77,6 +80,29 @@ namespace Server.Controllers
 
             var userName = User.GetUsername();
             var AppUser = await _userManager.FindByNameAsync(userName);
+
+            var userStatus = await _titleStatusRepository.GetByIdAsync(AppUser.Id, titleId);
+
+            if (userStatus == null) 
+            {
+                var newUserStatus = new CreateTitleStatusDto {
+                    TitleId = titleId,
+                    StatusId = 3,
+                    StartDate = DateOnly.FromDateTime(DateTime.Now),
+                    EndDate = DateOnly.FromDateTime(DateTime.Now)
+                };
+
+                await _titleStatusRepository.CreateAsync(AppUser.Id, newUserStatus.toCreateTitleStatusDto());
+            } else if(userStatus.Status.Name != "Finished") {
+                var updateUserStatus = new UpdateTitleStatusDto
+                {
+                    StatusId = 3,
+                    StartDate = userStatus.StartDate,
+                    EndDate = DateOnly.FromDateTime(DateTime.Now)
+                };
+                    
+                await _titleStatusRepository.UpdateAsync(titleId, updateUserStatus, AppUser.Id);
+            }
 
             var review = reviewDto.toCreateReviewDto(titleId);
             review.AppUserId = AppUser.Id;

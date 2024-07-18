@@ -4,7 +4,7 @@ import Card from "../Card/Card";
 import { useEffect, useState } from "react";
 import { Title } from "../../types";
 import Spinner from "../Spinner/Spinner";
-import { api } from "../../Context/useAuth";
+import { fetchTitles } from "../../api";
 
 function BestSection() {
   const [loading, setLoading] = useState(true);
@@ -14,45 +14,20 @@ function BestSection() {
   const [bestTvShow, setBestTvShow] = useState<Title | null>(null);
   const date = new Date();
 
-  async function fetchBest() {
-    try {
-      let response = await fetch(api + "/title/?type=book" + "&pageSize=1" + "&sortBy=score" + "&isDescending=true" + "&fromCurrentYear=true");
-      if (!response.ok) {
-        throw new Error("Getting titles failded");
-      }
-      let data = await response.json();
-      setBestBook(data.items[0]);
-
-      response = await fetch(api + "/title/?type=game" + "&pageSize=1" + "&sortBy=score" + "&isDescending=true" + "&fromCurrentYear=true");
-      if (!response.ok) {
-        throw new Error("Getting titles failded");
-      }
-      data = await response.json();
-      setBestGame(data.items[0]);
-
-      response = await fetch(api + "/title/?type=Movie" + "&pageSize=1" + "&sortBy=score" + "&isDescending=true" + "&fromCurrentYear=true");
-      if (!response.ok) {
-        throw new Error("Getting titles failded");
-      }
-      data = await response.json();
-      setBestMovie(data.items[0]);
-
-      response = await fetch(api + "/title/?type=TV Show" + "&pageSize=1" + "&sortBy=score" + "&isDescending=true" + "&fromCurrentYear=true");
-      if (!response.ok) {
-        throw new Error("Getting titles failded");
-      }
-      data = await response.json();
-      setBestTvShow(data.items[0]);
-
+  async function fetchData() {
+      const book = await fetchTitles("Book", "", "score", "", 1, true)
+      setBestBook(book.items[0])
+      const game = await fetchTitles("Game", "", "score", "", 1, true)
+      setBestGame(game.items[0])
+      const movie = await fetchTitles("Movie", "", "score", "", 1, true)
+      setBestMovie(movie.items[0])
+      const show = await fetchTitles("Tv Show", "", "score", "", 1, true)
+      setBestTvShow(show.items[0])
       setLoading(false);
-    } catch (error: any) {
-      console.log(error.message);
-    }
   }
 
   useEffect(() => {
-    setLoading(true);
-    fetchBest();
+    fetchData();
   }, []);
 
   return (

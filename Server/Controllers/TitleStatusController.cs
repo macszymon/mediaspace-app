@@ -22,10 +22,12 @@ namespace YourNamespace.Controllers
     public class TitleStatusController : ControllerBase
     {
         private readonly ITitleStatusRepository _titleStatusRepository;
+        private readonly IReviewRepository _reviewRepository;
         private readonly UserManager<AppUser> _userManager;
 
-        public TitleStatusController(ITitleStatusRepository titleStatusRepository, UserManager<AppUser> userManager)
+        public TitleStatusController(ITitleStatusRepository titleStatusRepository,IReviewRepository reviewRepository, UserManager<AppUser> userManager)
         {
+            _reviewRepository = reviewRepository;
             _titleStatusRepository = titleStatusRepository;
             _userManager = userManager;
         }
@@ -77,11 +79,25 @@ namespace YourNamespace.Controllers
             var userName = User.GetUsername();
             var AppUser = await _userManager.FindByNameAsync(userName);
 
-            var titleStatus = await _titleStatusRepository.UpdateAsync(titleId, titleStatusDto, AppUser.Id);
+            var titleStatus = await _titleStatusRepository.GetByIdAsync(AppUser.Id, titleId);
 
             if (titleStatus == null) 
             {
                 return BadRequest("Title Status not found.");
+            }
+
+            if(titleStatus.StatusId != titleStatusDto.StatusId && titleStatusDto.StatusId == 2) {
+                titleStatusDto.StartDate = DateOnly.FromDateTime(DateTime.Now);
+            } else if(titleStatus.StatusId != titleStatusDto.StatusId && titleStatusDto.StatusId == 3) {
+                titleStatusDto.EndDate = DateOnly.FromDateTime(DateTime.Now);
+            }
+
+            titleStatus = await _titleStatusRepository.UpdateAsync(titleId, titleStatusDto, AppUser.Id);
+
+            var userReview = await _reviewRepository.GetByIdAsync(titleId, AppUser.Id);
+
+            if(userReview != null && titleStatus.Status.Name != "Finished") {
+                await _reviewRepository.DeleteAsync(userReview.Id, AppUser.Id);
             }
 
             return Ok(titleStatus.toTitleStatusDto());
@@ -98,12 +114,18 @@ namespace YourNamespace.Controllers
                 return BadRequest(ModelState);
 
             var titleStatus = titleStatusDto.toCreateTitleStatusDto();
-            
+
             titleStatus = await _titleStatusRepository.CreateAsync(AppUser.Id, titleStatus);
 
             if (titleStatus == null)
             {
                 return BadRequest("User already has a status for this title!");
+            }
+
+            var userReview = await _reviewRepository.GetByIdAsync(titleStatus.TitleId, AppUser.Id);
+
+            if(userReview != null && titleStatus.Status.Name != "Finished") {
+                await _reviewRepository.DeleteAsync(userReview.Id, AppUser.Id);
             }
 
             return Ok(titleStatus.toTitleStatusDto());
@@ -119,11 +141,17 @@ namespace YourNamespace.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var title = await _titleStatusRepository.DeleteAsync(AppUser.Id, titleId);
+            var titleStatus = await _titleStatusRepository.DeleteAsync(AppUser.Id, titleId);
 
-            if (title == null) 
+            if (titleStatus == null) 
             {
                 return NotFound();
+            }
+
+            var userReview = await _reviewRepository.GetByIdAsync(titleId, AppUser.Id);
+
+            if(userReview != null) {
+                await _reviewRepository.DeleteAsync(userReview.Id, AppUser.Id);
             }
 
             return NoContent();

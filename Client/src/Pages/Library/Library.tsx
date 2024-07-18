@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { TiArrowSortedDown } from "react-icons/ti";
 import styles from "./Library.module.css";
-import { api, useAuth } from "../../Context/useAuth";
+import { useAuth } from "../../Context/useAuth";
 import { UserTitleStatus } from "../../types";
 import Spinner from "../../Components/Spinner/Spinner";
 import Card from "../../Components/Card/Card";
+import { fetchUserStatuses } from "../../api";
 
 function Library() {
   const [type, setType] = useState("Book");
@@ -14,22 +15,11 @@ function Library() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { token } = useAuth();
 
-  async function fetchStatuses() {
-    try {
-      const response = await fetch(api + "/TitleStatus/?type=" + type + "&status=" + status, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Getting userStatus failed");
-      }
-      const data = await response.json();
+  async function handleData() {
+    if (token) {
+      const data = await fetchUserStatuses(token, type, status);
       setStatuses(data);
       setLoading(false);
-    } catch (error: any) {
-      console.log(error.message);
     }
   }
 
@@ -40,7 +30,8 @@ function Library() {
   }
 
   useEffect(() => {
-    fetchStatuses();
+    setLoading(true);
+    handleData();
   }, [status, type]);
 
   return loading ? (
@@ -51,22 +42,22 @@ function Library() {
         <h1 className={styles.title}>Your library</h1>
         <ul className={styles.list}>
           <li className={styles.item}>
-            <button onClick={() => setType("Book")} className={`${styles.link} ${type === "Book" ? styles.linkType : ""}`}>
+            <button onClick={() => setType("Book")} className={`${styles.link} ${type === "Book" ? styles.linkActive : ""}`}>
               Books
             </button>
           </li>
           <li className={styles.item}>
-            <button onClick={() => setType("Game")} className={`${styles.link} ${type === "Game" ? styles.linkType : ""}`}>
+            <button onClick={() => setType("Game")} className={`${styles.link} ${type === "Game" ? styles.linkActive : ""}`}>
               Games
             </button>
           </li>
           <li className={styles.item}>
-            <button onClick={() => setType("Movie")} className={`${styles.link} ${type === "Movie" ? styles.linkType : ""}`}>
+            <button onClick={() => setType("Movie")} className={`${styles.link} ${type === "Movie" ? styles.linkActive : ""}`}>
               Movies
             </button>
           </li>
           <li className={styles.item}>
-            <button onClick={() => setType("Tv Show")} className={`${styles.link} ${type === "Tv Show" ? styles.linkType : ""}`}>
+            <button onClick={() => setType("Tv Show")} className={`${styles.link} ${type === "Tv Show" ? styles.linkActive : ""}`}>
               TV Shows
             </button>
           </li>

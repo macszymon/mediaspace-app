@@ -44,13 +44,6 @@
     margin-bottom: 1rem;
 }
 
-.filters {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
 .total {
   font-size: 1.1rem;
   font-weight: 300;

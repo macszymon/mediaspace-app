@@ -174,14 +174,13 @@
   }
 
   .img {
-    width: 17rem;
+    width: 15rem;
   }
 
   .sidebar {
-    position: sticky;
-    top: 5rem;
     grid-row: 2;
     grid-column: 1;
+    width: 17rem;
   }
 
   .content {

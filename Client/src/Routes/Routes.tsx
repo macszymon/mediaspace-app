@@ -35,19 +35,19 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/books/:sort?",
+        path: "/books/:sort?/:pageNumber?",
         element: <Browse type="Book" />,
       },
       {
-        path: "/games/:sort?",
+        path: "/games/:sort?/:pageNumber?",
         element: <Browse type="Game" />,
       },
       {
-        path: "/movies/:sort?",
+        path: "/movies/:sort?/:pageNumber?",
         element: <Browse type="Movie" />,
       },
       {
-        path: "/shows/:sort",
+        path: "/shows/:sort?/:pageNumber?",
         element: <Browse type="Show" />,
       },
       {
@@ -57,10 +57,6 @@ export const router = createBrowserRouter([
       {
         path: "/library",
         element: <Library />,
-      },
-      {
-        path: "/profile",
-        element: <Home />,
       },
       {
         path: "/search/:searchQuery",

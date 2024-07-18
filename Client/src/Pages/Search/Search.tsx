@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { api } from "../../Context/useAuth";
 import styles from "./Search.module.css";
 
 import { useParams } from "react-router-dom";
@@ -7,6 +6,7 @@ import { Title } from "../../types";
 import Spinner from "../../Components/Spinner/Spinner";
 import Card from "../../Components/Card/Card";
 import Pagination from "../../Components/Pagination/Pagination";
+import { fetchTitles } from "../../api";
 
 function Search() {
   const { searchQuery } = useParams();
@@ -21,24 +21,16 @@ function Search() {
     setCurrentPage(parseInt(button.value));
   };
 
-  async function fetchTitles() {
-    try {
-      const response = await fetch(api + "/title/?titleName=" + searchQuery + "&pageNumber=" + currentPage);
-      if (!response.ok) {
-        throw new Error("Getting titles failded");
-      }
-      const data = await response.json();
-      setTitles(data.items);
-      setTotalPages(data.totalPages);
-      setTotalTitles(data.totalCount);
-      setLoading(false);
-    } catch (error: any) {
-      console.log(error.message);
-    }
+  async function handleData() {
+    const data = await fetchTitles("",1,"",searchQuery)
+    setTitles(data.items);
+    setTotalPages(data.totalPages);
+    setTotalTitles(data.totalCount);
+    setLoading(false);
   }
 
   useEffect(() => {
-    fetchTitles();
+    handleData()
   }, [currentPage]);
 
   return loading ? (

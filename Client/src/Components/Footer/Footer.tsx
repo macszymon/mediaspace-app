@@ -1,8 +1,11 @@
+import { useAuth } from "../../Context/useAuth";
 import styles from "./Footer.module.css";
 
 import { Link } from "react-router-dom";
 
 function Footer() {
+  const {isLoggedIn} = useAuth();
+
   return (
     <footer className={styles.footer}>
       <div className={styles.divider}>
@@ -35,16 +38,11 @@ function Footer() {
               TV Shows
             </Link>
           </li>
-          <li className={styles.item}>
+          {isLoggedIn() && <li className={styles.item}>
             <Link to="Library" className="link">
               Library
             </Link>
-          </li>
-          <li className={styles.item}>
-            <Link to="Profile" className="link">
-              Profile
-            </Link>
-          </li>
+          </li>}
         </ul>
         <ul className={styles.aataList}>
           <li className={styles.dataItem}>
