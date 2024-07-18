@@ -210,9 +210,9 @@ export async function removeUserStatus(id: string, token: string) {
   }
 }
 
-export async function changeReview(id: string, score: number, content: string = "", token: string) {
+export async function changeReview(titleId: number, score: number, content: string = "", token: string) {
   try {
-    const response = await fetch(api + "/Review/" + id, {
+    const response = await fetch(api + "/Review/" + titleId, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

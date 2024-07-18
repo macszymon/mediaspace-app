@@ -1,19 +1,25 @@
 import { useEffect, useState } from "react";
 import { TiArrowSortedDown } from "react-icons/ti";
-import styles from "./Library.module.css";
+
 import { useAuth } from "../../Context/useAuth";
+
+import { fetchUserStatuses } from "../../api";
 import { UserTitleStatus } from "../../types";
+
 import Spinner from "../../Components/Spinner/Spinner";
 import Card from "../../Components/Card/Card";
-import { fetchUserStatuses } from "../../api";
+
+import styles from "./Library.module.css";
 
 function Library() {
+  const { token } = useAuth();
+
+  const [loading, setLoading] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const [type, setType] = useState("Book");
   const [status, setStatus] = useState("");
   const [statuses, setStatuses] = useState<UserTitleStatus[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { token } = useAuth();
 
   async function handleData() {
     if (token) {

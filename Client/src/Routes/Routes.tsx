@@ -1,4 +1,7 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
+
+import { UserProvider } from "../Context/useAuth";
+
 import Login from "../Pages/Authorization/Login";
 import SignUp from "../Pages/Authorization/SignUp";
 import Browse from "../Pages/Browse/Browse";
@@ -7,7 +10,6 @@ import TitleDetails from "../Pages/TitleDetails/TitleDetails";
 import Error from "../Pages/Error/Error";
 import Footer from "../Components/Footer/Footer";
 import Navbar from "../Components/Narbar/Navbar";
-import { UserProvider } from "../Context/useAuth";
 import Search from "../Pages/Search/Search";
 import Admin from "../Pages/Admin/Admin";
 import Library from "../Pages/Library/Library";

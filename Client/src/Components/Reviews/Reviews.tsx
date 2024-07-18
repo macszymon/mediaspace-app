@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
+import { useAuth } from "../../Context/useAuth";
+
 import { ReviewType } from "../../types";
+import { changeReview } from "../../api";
+
 import Review from "./Review";
 
 import styles from "./Reviews.module.css";
-import { useAuth } from "../../Context/useAuth";
-import { changeReview } from "../../api";
 
 interface Props {
   userReview: ReviewType | null;
@@ -15,8 +17,9 @@ interface Props {
 }
 
 function Reviews({ userReview, reviews, setUserReview }: Props) {
-  const [reviewContent, setReviewContent] = useState(userReview?.content);
   const { user } = useAuth();
+
+  const [reviewContent, setReviewContent] = useState(userReview?.content);
 
   async function handleReviewAdd(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -33,8 +36,6 @@ function Reviews({ userReview, reviews, setUserReview }: Props) {
       setReviewContent("");
     }
   }
-
-  useEffect(() => {}, [userReview]);
 
   return (
     <section className={styles.reviews}>

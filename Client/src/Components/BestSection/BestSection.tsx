@@ -1,29 +1,33 @@
-import styles from "./BestSection.module.css";
+import { useEffect, useState } from "react";
+
+import { fetchTitles } from "../../api";
+import { Title } from "../../types";
 
 import Card from "../Card/Card";
-import { useEffect, useState } from "react";
-import { Title } from "../../types";
 import Spinner from "../Spinner/Spinner";
-import { fetchTitles } from "../../api";
+
+import styles from "./BestSection.module.css";
 
 function BestSection() {
+  const date = new Date();
+
   const [loading, setLoading] = useState(true);
+
   const [bestBook, setBestBook] = useState<Title | null>(null);
   const [bestGame, setBestGame] = useState<Title | null>(null);
   const [bestMovie, setBestMovie] = useState<Title | null>(null);
   const [bestTvShow, setBestTvShow] = useState<Title | null>(null);
-  const date = new Date();
 
   async function fetchData() {
-      const book = await fetchTitles("Book", "", "score", "", 1, true)
-      setBestBook(book.items[0])
-      const game = await fetchTitles("Game", "", "score", "", 1, true)
-      setBestGame(game.items[0])
-      const movie = await fetchTitles("Movie", "", "score", "", 1, true)
-      setBestMovie(movie.items[0])
-      const show = await fetchTitles("Tv Show", "", "score", "", 1, true)
-      setBestTvShow(show.items[0])
-      setLoading(false);
+    const book = await fetchTitles("Book", "", "score", "", 1, true);
+    setBestBook(book.items[0]);
+    const game = await fetchTitles("Game", "", "score", "", 1, true);
+    setBestGame(game.items[0]);
+    const movie = await fetchTitles("Movie", "", "score", "", 1, true);
+    setBestMovie(movie.items[0]);
+    const show = await fetchTitles("Tv Show", "", "score", "", 1, true);
+    setBestTvShow(show.items[0]);
+    setLoading(false);
   }
 
   useEffect(() => {

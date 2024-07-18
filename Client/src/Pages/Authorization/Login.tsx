@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
-import styles from "./Authorization.module.css";
 import { Link, useNavigate } from "react-router-dom";
+
 import { useAuth } from "../../Context/useAuth";
+
+import styles from "./Authorization.module.css";
 
 type Props = {};
 
 function Login({}: Props) {
+  const navigate = useNavigate();
+  
+  const { user, loginUser, errorMessage } = useAuth();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { user, loginUser, errorMessage } = useAuth();
-  const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -1,9 +1,8 @@
 import { PacmanLoader } from "react-spinners";
+
 import styles from "./Spiner.module.css";
 
-type Props = {};
-
-const Spinner = (props: Props) => {
+const Spinner = () => {
   return (
     <div className={styles.spinner}>
       <PacmanLoader color="#efecf0" size={32} />

@@ -1,12 +1,13 @@
-import styles from "./CardsSlider.module.css";
-
-import Card from "../Card/Card";
 import { useEffect, useState } from "react";
-import { Title } from "../../types";
-import Spinner from "../Spinner/Spinner";
 import { Link } from "react-router-dom";
+
+import { Title } from "../../types";
 import { fetchTitles } from "../../api";
 
+import Card from "../Card/Card";
+import Spinner from "../Spinner/Spinner";
+
+import styles from "./CardsSlider.module.css";
 interface Props {
   header: string;
   sort: string;
@@ -17,12 +18,12 @@ function CardsSlider({ header, sort }: Props) {
   const [titles, setTitles] = useState<Title[]>([]);
 
   async function handleData() {
-    const data = await fetchTitles("","", sort, "", 12);
-    setTitles(data.items)
+    const data = await fetchTitles("", "", sort, "", 12);
+    setTitles(data.items);
   }
-  
+
   useEffect(() => {
-    handleData()
+    handleData();
     setLoading(false);
   }, []);
 

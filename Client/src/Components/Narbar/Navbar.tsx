@@ -1,15 +1,18 @@
-import styles from "./Navbar.module.css";
-
 import { useState } from "react";
-import { IoIosSearch } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
+import { IoIosSearch } from "react-icons/io";
+
 import { useAuth } from "../../Context/useAuth";
 
+import styles from "./Navbar.module.css";
+
 function Navbar() {
-  const [isActive, setIsActive] = useState(false);
-  const { user, logout } = useAuth();
-  const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
+
+  const { user, logout } = useAuth();
+
+  const [isActive, setIsActive] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
 
   const handleHamburgerClick = () => {
     setIsActive(!isActive);
@@ -48,7 +51,7 @@ function Navbar() {
               </Link>
             </li>
           )}
-          {user?.roles && user.roles.includes("Admin") && (
+          {user?.roles.includes("Admin") && (
             <li onClick={closeNavMenu}>
               <Link to="/Admin" className="link">
                 Admin

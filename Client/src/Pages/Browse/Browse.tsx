@@ -1,33 +1,37 @@
-import styles from "./Browse.module.css";
-
-import Card from "../../Components/Card/Card";
-
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { TiArrowSortedDown } from "react-icons/ti";
-import Pagination from "../../Components/Pagination/Pagination";
-import { Title } from "../../types";
-import Spinner from "../../Components/Spinner/Spinner";
+
 import { fetchTitles } from "../../api";
+import { Title } from "../../types";
+
+import Pagination from "../../Components/Pagination/Pagination";
+import Card from "../../Components/Card/Card";
+import Spinner from "../../Components/Spinner/Spinner";
+
+import styles from "./Browse.module.css";
 
 interface Props {
   type: "Book" | "Game" | "Movie" | "Show";
 }
 
 function Browse({ type }: Props) {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const { sort = "", pageNumber = "1" } = useParams();
+
   const [loading, setLoading] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const [titles, setTitles] = useState<Title[]>([]);
   const [totalTitles, setTotalTitles] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const { sort = "", pageNumber = "1" } = useParams();
-  const navigate = useNavigate();
 
   const handlePageChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const button = e.target as HTMLButtonElement;
     navigate("/" + type + "s/" + sort + "/" + button.value);
   };
-  
+
   const handleSortChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const button = e.target as HTMLButtonElement;
     setIsDropdownOpen(false);
@@ -39,12 +43,12 @@ function Browse({ type }: Props) {
     setTitles(data.items);
     setTotalPages(data.totalPages);
     setTotalTitles(data.totalCount);
+    setLoading(false);
   }
 
   useEffect(() => {
     setLoading(true);
     handleData();
-    setLoading(false);
   }, [type, pageNumber, sort]);
 
   return loading ? (

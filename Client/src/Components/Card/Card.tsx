@@ -1,6 +1,6 @@
-import styles from "./Card.module.css";
-
 import { Link } from "react-router-dom";
+
+import styles from "./Card.module.css";
 
 interface Props {
   id: number;

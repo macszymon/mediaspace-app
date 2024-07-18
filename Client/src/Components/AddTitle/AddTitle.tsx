@@ -1,17 +1,23 @@
-import styles from "./AddTitle.module.css";
-
 import { useEffect, useState } from "react";
-import { AddTitleType, Category, Type } from "../../types";
-import { useAuth } from "../../Context/useAuth";
-import Spinner from "../Spinner/Spinner";
 import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../Context/useAuth";
+
 import { createTitle, fetchCatrgories, fetchTypes } from "../../api";
+import { AddTitleType, Category, Type } from "../../types";
+
+import Spinner from "../Spinner/Spinner";
+
+import styles from "./AddTitle.module.css";
 
 function AddTitle() {
   const navigate = useNavigate();
+
   const { token } = useAuth();
-  const [types, setTypes] = useState<Type[] | null>(null);
+
   const [loading, setLoading] = useState(true);
+  
+  const [types, setTypes] = useState<Type[] | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [titleCategoriesIds, setTitleCategoriesIds] = useState<number[]>([]);
   const [title, setTitle] = useState<AddTitleType>({

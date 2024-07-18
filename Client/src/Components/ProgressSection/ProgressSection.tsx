@@ -1,22 +1,27 @@
-import styles from "./ProgressSection.module.css";
-
-import { ImBooks } from "react-icons/im";
-import { IoGameController } from "react-icons/io5";
-import { BiSolidCameraMovie } from "react-icons/bi";
-import { useAuth } from "../../Context/useAuth";
-import { Link } from "react-router-dom";
-import { UserTitleStatus } from "../../types";
 import { useEffect, useState } from "react";
-import Spinner from "../Spinner/Spinner";
+import { Link } from "react-router-dom";
+import { BiSolidCameraMovie } from "react-icons/bi";
+import { IoGameController } from "react-icons/io5";
+import { ImBooks } from "react-icons/im";
+
+import { useAuth } from "../../Context/useAuth";
+
 import { fetchUserStatuses } from "../../api";
+import { UserTitleStatus } from "../../types";
+
+import Spinner from "../Spinner/Spinner";
+
+import styles from "./ProgressSection.module.css";
 
 function ProgressSection() {
   const { isLoggedIn, token } = useAuth();
+
+  const [loading, setLoading] = useState(true);
+
   const [bookStatuses, setBookStatuses] = useState<UserTitleStatus[]>([]);
   const [gameStatuses, setGameStatuses] = useState<UserTitleStatus[]>([]);
   const [movieStatuses, setMovieStatuses] = useState<UserTitleStatus[]>([]);
   const [tvStatuses, setTvStatuses] = useState<UserTitleStatus[]>([]);
-  const [loading, setLoading] = useState(true);
 
   async function fetchTitleStatuses() {
     if (token) {

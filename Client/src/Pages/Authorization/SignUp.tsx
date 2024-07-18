@@ -1,14 +1,18 @@
-import { Link, useNavigate } from "react-router-dom";
-import styles from "./Authorization.module.css";
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 import { useAuth } from "../../Context/useAuth";
 
+import styles from "./Authorization.module.css";
+
 const SignUp = () => {
+  const navigate = useNavigate();
+
+  const { user, registerUser, errorMessage } = useAuth();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const navigate = useNavigate();
-  const { user, registerUser, errorMessage } = useAuth(); 
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

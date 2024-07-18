@@ -1,14 +1,16 @@
-import styles from "./TitleDetails.module.css";
-
-import Reviews from "../../Components/Reviews/Reviews";
-
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Spinner from "../../Components/Spinner/Spinner";
-import { ReviewType, Status, Title, UserTitleStatus } from "../../types";
-import { useAuth } from "../../Context/useAuth";
 import { TiArrowSortedDown } from "react-icons/ti";
+
+import { useAuth } from "../../Context/useAuth";
+
+import { ReviewType, Status, Title, UserTitleStatus } from "../../types";
 import { addScore, changeReview, changeUserStatus, createUserStatus, fetchStatuses, fetchTitle, fetchUserReview, fetchUserStatus, removeReview, removeUserStatus } from "../../api";
+
+import Reviews from "../../Components/Reviews/Reviews";
+import Spinner from "../../Components/Spinner/Spinner";
+
+import styles from "./TitleDetails.module.css";
 
 function TitleDetails() {
   const navigate = useNavigate();
@@ -33,7 +35,7 @@ function TitleDetails() {
 
   async function handleAddScore(score: number) {
     if (user && userReview) {
-      setUserReview(await changeReview(id, score, userReview.content, user.token));
+      setUserReview(await changeReview(parseInt(id), score, userReview.content, user.token));
     } else if (user && !userReview) {
       setUserReview(await addScore(id, score, user.token));
     } else {
@@ -78,19 +80,19 @@ function TitleDetails() {
     }
   }
 
-  async function fetchData() {
-    setTitle(await fetchTitle(id));
-    setStatuses(await fetchStatuses());
-    if (user) {
-      setUserReview(await fetchUserReview(id, user.token));
-      const userStatus = await fetchUserStatus(id, user.token);
-      setUserStatus(userStatus);
-      setStartDate(userStatus.startDate);
-      setEndDate(userStatus.endDate);
-    }
-  }
-
   useEffect(() => {
+    async function fetchData() {
+      setTitle(await fetchTitle(id));
+      setStatuses(await fetchStatuses());
+      if (user) {
+        setUserReview(await fetchUserReview(id, user.token));
+        const userStatus = await fetchUserStatus(id, user.token);
+        setUserStatus(userStatus);
+        setStartDate(userStatus.startDate);
+        setEndDate(userStatus.endDate);
+      }
+    }
+    
     fetchData();
     setLoading(false);
   }, []);
