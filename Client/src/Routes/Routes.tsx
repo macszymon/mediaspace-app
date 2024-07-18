@@ -13,6 +13,7 @@ import Navbar from "../Components/Narbar/Navbar";
 import Search from "../Pages/Search/Search";
 import Admin from "../Pages/Admin/Admin";
 import Library from "../Pages/Library/Library";
+import ProtectedRoute from "./ProtectedRoute";
 
 const Layout = () => {
   return (
@@ -58,7 +59,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/library",
-        element: <Library />,
+        element: <ProtectedRoute><Library /></ProtectedRoute>,
       },
       {
         path: "/search/:searchQuery",
@@ -66,7 +67,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/admin",
-        element: <Admin />,
+        element: <ProtectedRoute isAdminRoute={true}><Admin /></ProtectedRoute>,
       },
     ],
   },
