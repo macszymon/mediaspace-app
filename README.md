@@ -9,15 +9,18 @@ Fullstack application made with React with TypeScript on Frontend, ASP .NET on B
 * Add reviews after finishing titles,
 * Browse through all the titles in the database.
 
-## Live Preview:
+## Live Frontend Preview:
 [https://macszymon.github.io/mediaspace-app/](https://macszymon.github.io/mediaspace-app/)
  
 ## Technologies
 Project is created with:
-* HTML5
-* CSS
-* React
-* React Router
+* HTML5,
+* CSS,
+* React,
+* React Router,
+* ASP .NET,
+* Enitity Framework,
+* SQL Database.
 
 ## Sources
 * Books data provided by - [Open Library](https://openlibrary.org/developers/api)
