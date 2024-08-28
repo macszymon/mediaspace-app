@@ -9,7 +9,7 @@ Fullstack application made with React with TypeScript on Frontend, ASP .NET on B
 * Add reviews after finishing titles,
 * Browse through all the titles in the database.
 
-## Live Frontend Preview:
+## Live Preview (Frontend only to demonstrate functionality with mock data. Any changes will disappear on refresh.):
 [https://macszymon.github.io/mediaspace-app/](https://macszymon.github.io/mediaspace-app/)
  
 ## Technologies
